@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bilibili Notes 交互式课程</title>
+
+  <!-- Google Fonts: Bricolage Grotesque · DM Sans · JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!--
+    Accent: coral — warm and inviting, like Bilibili pink
+  -->
+  <style>
+    :root {
+      --color-accent:       #E06B56;
+      --color-accent-hover: #C85A47;
+      --color-accent-light: #FDECEA;
+      --color-accent-muted: #E89585;
+    }
+  </style>
+
+  <script src="main.js" defer></script>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="nav-inner">
+      <span class="nav-title">Bilibili Notes</span>
+      <div class="nav-dots" id="nav-dots" role="tablist">
+        <button class="nav-dot" data-target="module-1" data-tooltip="粘贴链接，获得笔记" role="tab" aria-label="Module 1: 粘贴链接，获得笔记"></button>
+        <button class="nav-dot" data-target="module-2" data-tooltip="认识幕后角色" role="tab" aria-label="Module 2: 认识幕后角色"></button>
+        <button class="nav-dot" data-target="module-3" data-tooltip="数据如何流转" role="tab" aria-label="Module 3: 数据如何流转"></button>
+        <button class="nav-dot" data-target="module-4" data-tooltip="连接外部世界" role="tab" aria-label="Module 4: 连接外部世界"></button>
+        <button class="nav-dot" data-target="module-5" data-tooltip="优雅地处理失败" role="tab" aria-label="Module 5: 优雅地处理失败"></button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- modules/*.html content is assembled here by build.sh -->
+<!-- MODULE 1: 粘贴链接，获得笔记 -->
+<section class="module" id="module-1" style="min-height:100dvh;background:var(--color-bg)">
+
+  <div class="module-content">
+
+    <!-- ── MODULE HEADER ──────────────────────────────────────── -->
+    <header class="module-header animate-in">
+      <span class="module-number">01</span>
+      <h1 class="module-title">粘贴链接，获得笔记</h1>
+      <p class="module-subtitle">你每天刷 B 站，复制一个链接，一条命令——然后呢？让我们打开快递分拣中心的大门，看看包裹在各个站点之间经历了什么。</p>
+    </header>
+
+    <!-- ============================================================
+         SCREEN 1 — 你只需要一行命令
+         ============================================================ -->
+    <div class="screen animate-in" id="s1-command">
+      <h2 class="screen-heading">你只需要一行命令</h2>
+
+      <p>想象你走进一家快递分拣中心。你只需要把包裹（视频链接）递给前台，说一句暗号。剩下的，分拣中心的机器全部搞定。</p>
+
+      <p>在 Bilibili Notes 里，这句"暗号"就是下面这一行命令：</p>
+
+      <!-- ── CODE / ENGLISH TRANSLATION BLOCK ──────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">终端</span>
+<span class="code-function">uv</span> <span class="code-string">run</span> <span class="code-keyword">python</span> <span class="code-string">scripts/pipeline.py</span> <span class="code-property">--bv</span> <span class="code-value">BV1ABcsztEcY</span>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">逐词翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>uv run</strong> &mdash; 用 <span class="term" data-definition="uv 是一个 Python 包管理器，类似 npm 之于 Node.js。它自动创建虚拟环境、安装依赖，让你不用手动配环境就能运行 Python 程序。">uv</span> 工具运行（自动装好依赖）</div>
+            <div class="tl"><strong>python scripts/pipeline.py</strong> &mdash; 执行流水线脚本</div>
+            <div class="tl"><strong>--bv</strong> &mdash; 指定输入模式为 <span class="term" data-definition="BV 号是 B 站每个视频的唯一标识符，类似身份证号。格式为 BV + 10 位字母数字，如 BV1ABcsztEcY。它出现在视频 URL 的末尾。">BV号</span></div>
+            <div class="tl"><strong>BV1ABcsztEcY</strong> &mdash; 这个视频的 BV 号（影视飓风的一期视频）</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x2139;&#xFE0F;</span>
+        <div class="callout-content">
+          <span class="callout-title">什么是 CLI？</span>
+          <p><span class="term" data-definition="CLI 即 Command Line Interface（命令行界面），是通过在终端窗口输入文字命令来操作程序的方式。和你习惯的点击按钮不同，CLI 靠输入精确的文字指令来告诉计算机要做什么。">CLI</span>（命令行界面）就是你跟程序对话的窗口。你输入一行文字，程序回复一行结果。没有按钮，没有界面——只有文字。这行命令就是你对"分拣中心"发出的第一张工单。</p>
+        </div>
+      </div>
+
+      <p>按回车之后，程序开始干活。它不会问你任何问题——你只需要等。</p>
+
+      <!-- ── REAL CODE SNIPPET ─────────────────────────────────── -->
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F4E6;</span>
+        <div class="callout-content">
+          <span class="callout-title">源码一瞥：流水线入口</span>
+          <p>以下是 <code>scripts/pipeline.py</code> 的核心函数签名。不用读懂每一行——只需看到它接收一个 BV 号，然后返回一个文件路径（生成的笔记）：</p>
+        </div>
+      </div>
+
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python</span>
+<span class="code-keyword">def</span> <span class="code-function">process_single</span>(bvid: <span class="code-string">str</span>, config: <span class="code-string">dict</span>, ...) -> <span class="code-string">Path</span>:
+    notes_dir, images_dir = get_vault_paths(config)
+
+    <span class="code-comment"># 检查是否已有笔记（跳过重复工作）</span>
+    existing = notes_dir.glob(<span class="code-string">f"*({bvid}).md"</span>)
+    <span class="code-keyword">if</span> existing:
+        <span class="code-keyword">return</span> existing   <span class="code-comment"># 已有就直接返回</span>
+
+    <span class="code-comment"># 1. 获取数据 → 2. 转录 → 3. 抽帧</span>
+    <span class="code-comment"># → 4. 分析 → 5. 生成笔记</span>
+    ...
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>process_single</strong> &mdash; 处理一个视频的主函数</div>
+            <div class="tl"><strong>bvid</strong> &mdash; 传入的 BV 号（你的"快递单号"）</div>
+            <div class="tl"><strong>get_vault_paths</strong> &mdash; 找到 Obsidian 笔记库存放位置</div>
+            <div class="tl"><strong>existing check</strong> &mdash; 先查查这个快递是否已经处理过</div>
+            <div class="tl"><strong>5 个步骤</strong> &mdash; 按顺序走完整个分拣流水线</div>
+          </div>
+        </div>
+      </div>
+
+      <p>接下来，让我们跟着这个包裹，一站一站地走完整个流程。</p>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 2 — 幕后发生了什么
+         ============================================================ -->
+    <div class="screen animate-in" id="s2-flow">
+      <h2 class="screen-heading">幕后发生了什么</h2>
+
+      <p>你的包裹（BV 号）进入分拣中心后，会经过 5 个站点。每个站点都有专门的"工人"负责一道工序。点击"下一步"，跟着包裹走一遍。</p>
+
+      <!-- ── FLOW ANIMATION ────────────────────────────────────── -->
+      <div class="flow-animation" data-steps="[{&quot;label&quot;:&quot;用户提交 BV 号，快递包裹进入分拣中心&quot;,&quot;highlight&quot;:&quot;flow-user&quot;,&quot;from&quot;:&quot;user&quot;,&quot;to&quot;:&quot;pipeline&quot;,&quot;packet&quot;:true},{&quot;label&quot;:&quot;分拣中心派单：DataFetcher 开始抓取视频信息、字幕、评论、音频&quot;,&quot;highlight&quot;:&quot;flow-fetcher&quot;,&quot;from&quot;:&quot;pipeline&quot;,&quot;to&quot;:&quot;fetcher&quot;,&quot;packet&quot;:true},{&quot;label&quot;:&quot;并行处理：FrameExtractor 抽取关键帧，Whisper 转录音频为文字&quot;,&quot;highlight&quot;:&quot;flow-extractor&quot;,&quot;from&quot;:&quot;fetcher&quot;,&quot;to&quot;:&quot;extractor&quot;,&quot;packet&quot;:true},{&quot;label&quot;:&quot;NoteGenerator 用 AI 分析帧内容，结合字幕/转录生成结构化笔记&quot;,&quot;highlight&quot;:&quot;flow-generator&quot;,&quot;from&quot;:&quot;extractor&quot;,&quot;to&quot;:&quot;generator&quot;,&quot;packet&quot;:true},{&quot;label&quot;:&quot;成品送达：一份格式规范的 Obsidian Markdown 笔记已就位&quot;,&quot;highlight&quot;:&quot;flow-obsidian&quot;,&quot;from&quot;:&quot;generator&quot;,&quot;to&quot;:&quot;obsidian&quot;,&quot;packet&quot;:true}]">
+
+        <!-- ACTORS -->
+        <div class="flow-actors">
+          <div class="flow-actor" id="flow-user">
+            <div class="flow-actor-icon" style="color:var(--color-actor-1)">U</div>
+            <span>用户</span>
+          </div>
+          <div class="flow-actor" id="flow-pipeline">
+            <div class="flow-actor-icon" style="color:var(--color-actor-2)">P</div>
+            <span>Pipeline</span>
+          </div>
+          <div class="flow-actor" id="flow-fetcher">
+            <div class="flow-actor-icon" style="color:var(--color-actor-3)">D</div>
+            <span>DataFetcher</span>
+          </div>
+          <div class="flow-actor" id="flow-extractor">
+            <div class="flow-actor-icon" style="color:var(--color-actor-4)">E</div>
+            <span>FrameExtractor</span>
+          </div>
+          <div class="flow-actor" id="flow-generator">
+            <div class="flow-actor-icon" style="color:var(--color-actor-5)">G</div>
+            <span>NoteGenerator</span>
+          </div>
+          <div class="flow-actor" id="flow-obsidian">
+            <div class="flow-actor-icon" style="color:var(--color-actor-1)">O</div>
+            <span>Obsidian</span>
+          </div>
+        </div>
+
+        <!-- STEP LABEL -->
+        <div class="flow-step-label">点击"下一步"，开始跟踪包裹旅程</div>
+
+        <!-- PACKET -->
+        <div class="flow-packet"></div>
+
+        <!-- CONTROLS -->
+        <div class="flow-controls">
+          <button class="btn btn-primary flow-next-btn">下一步</button>
+          <button class="btn flow-reset-btn">重置</button>
+          <span class="flow-progress">Step 0 / 5</span>
+        </div>
+      </div>
+
+      <!-- ── STEP SUMMARY CARDS ────────────────────────────────── -->
+      <p>整个流程用一句话概括：</p>
+
+      <div class="step-cards stagger-children">
+        <div class="step-card animate-in">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>抓取数据</strong>
+            <p>DataFetcher 去 B 站服务器拉取视频信息、<span class="term" data-definition="字幕是视频画面上叠加的文字，通常是视频作者上传的或 B 站自动生成的语音转文字内容。不是所有视频都有字幕。">字幕</span>、<span class="term" data-definition="评论区是观众在视频下方发表的公开留言。程序会抓取热门评论用于笔记的"精选评论"板块。">评论</span>和<span class="term" data-definition="音频是视频中的声音轨道。程序会下载音频文件用于语音转文字（当视频没有字幕时）。">音频</span>——就像分拣员从包裹上取下所有快递单据。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>抽取关键帧 + 转录音频</strong>
+            <p>FrameExtractor 从视频中均匀截取最有代表性的画面。<span class="term" data-definition="Whisper 是 OpenAI 开源的语音识别模型。它能把音频自动转成文字，支持多种语言。在 Bilibili Notes 中，当视频没有字幕时，就用 Whisper 来听写内容。">Whisper</span> 把音频听写成文字——两个工序可以同时进行。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>AI 分析 + 生成笔记</strong>
+            <p><span class="term" data-definition="视觉模型（Vision Model）是一种能"看懂"图片的人工智能模型。在本项目中，它接收截取的关键帧图片，然后用自然语言描述每张图片的内容。">视觉模型</span>逐张分析关键帧内容。NoteGenerator 把字幕、转录、帧描述、评论全部汇总，交给 <span class="term" data-definition="LLM 即 Large Language Model（大语言模型），如 GPT、Claude 等。在本项目中，LLM 负责阅读所有素材并生成结构化的笔记。">LLM</span> 生成最终笔记。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>存入 Obsidian</strong>
+            <p>生成的 <span class="term" data-definition="Markdown 是一种用纯文本格式编写文档的标记语言。用 # 表示标题、用 ** 表示加粗等。Obsidian 原生支持 Markdown 格式。">Markdown</span> 文件直接保存到你的 <span class="term" data-definition="Obsidian 是一款本地知识管理工具，所有笔记以 Markdown 文件形式保存在本地文件夹（称为 vault）中。">Obsidian</span> vault 中——打开 Obsidian 就能看到。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F4E6;</span>
+        <div class="callout-content">
+          <span class="callout-title">快递中心比喻</span>
+          <p>你投入一个包裹（BV 号）&rarr; 前台登记（Pipeline 接单）&rarr; 取件员拆箱提取信息（DataFetcher）&rarr; 质检员拍照 + 听写（FrameExtractor + Whisper）&rarr; 包装师分类整理贴标签（NoteGenerator + LLM）&rarr; 投递到你的邮箱（Obsidian vault）。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 3 — 产出的笔记长什么样
+         ============================================================ -->
+    <div class="screen animate-in" id="s3-output">
+      <h2 class="screen-heading">产出的笔记长什么样</h2>
+
+      <p>包裹投递完毕。你打开 Obsidian，会看到一份这样的笔记——不是一堆乱码，而是一个结构清晰、图文并茂的知识卡片。</p>
+
+      <!-- ── NOTE STRUCTURE VISUAL ─────────────────────────────── -->
+      <div style="margin:var(--space-8) 0">
+
+        <!-- FRONTMATTER -->
+        <div class="icon-rows">
+          <div class="icon-row animate-in">
+            <div class="icon-circle" style="background:var(--color-accent-light);color:var(--color-accent)">&#x1F3F7;&#xFE0F;</div>
+            <div>
+              <strong><span class="term" data-definition="Frontmatter 是 Markdown 文件最顶部用 --- 包裹的一段 YAML 元数据。Obsidian 使用它来存储笔记的标签、日期、链接等结构化信息，方便搜索和筛选。">Frontmatter</span> 元数据</strong>
+              <p>标题、BV号、UP主、时长、链接、日期、标签——笔记的"身份证"</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTE SECTIONS AS CARDS -->
+        <div class="pattern-cards" style="margin-top:var(--space-6)">
+
+          <div class="pattern-card animate-in" style="border-top-color:var(--color-actor-1)">
+            <div class="pattern-icon" style="background:var(--color-accent-light);color:var(--color-accent)">&#x1F4DD;</div>
+            <div class="pattern-title">概要 Summary</div>
+            <p class="pattern-desc">AI 自动生成的一段话，概括视频的核心内容。相当于快递单上的"物品摘要"。</p>
+          </div>
+
+          <div class="pattern-card animate-in" style="border-top-color:var(--color-actor-4)">
+            <div class="pattern-icon" style="background:#FEF3C7;color:#D97706">&#x1F4F7;</div>
+            <div class="pattern-title">关键帧 Keyframes</div>
+            <p class="pattern-desc">从视频中截取的代表性画面，每张配有 AI 生成的描述文字。相当于包裹里的实物照片。</p>
+          </div>
+
+          <div class="pattern-card animate-in" style="border-top-color:var(--color-actor-3)">
+            <div class="pattern-icon" style="background:var(--color-info-light);color:var(--color-info)">&#x1F4D6;</div>
+            <div class="pattern-title">详细笔记 Notes</div>
+            <p class="pattern-desc">按主题分段整理的笔记，来源是字幕或 Whisper 转录文本。每段有小标题和要点。</p>
+          </div>
+
+          <div class="pattern-card animate-in" style="border-top-color:var(--color-actor-5)">
+            <div class="pattern-icon" style="background:var(--color-success-light);color:var(--color-success)">&#x1F4AC;</div>
+            <div class="pattern-title">精选评论 Comments</div>
+            <p class="pattern-desc">从评论区抓取的热门评论。相当于其他"收件人"对这个包裹的评价。</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── REAL EXAMPLE REFERENCE ────────────────────────────── -->
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4CB;</span>
+        <div class="callout-content">
+          <span class="callout-title">真实例子</span>
+          <p>对视频 <code>BV1ABcsztEcY</code>（影视飓风：能卖上亿美金？国产短剧如何征服世界？）运行流水线后，生成的笔记包含 20 张关键帧截图、6 个主题分段（成本与效率、爽点驱动、商业逻辑等），以及完整的 frontmatter 元数据。文件名格式：<code>视频标题(BV号).md</code>。</p>
+        </div>
+      </div>
+
+      <!-- ── FRONTMATTER BADGE EXAMPLE ─────────────────────────── -->
+      <p>以下是 frontmatter 里的字段样例——每个字段都有明确用途：</p>
+
+      <div class="badge-list">
+        <div class="badge-item animate-in">
+          <code class="badge-code">title</code>
+          <span class="badge-desc">能卖上亿美金？国产短剧如何征服世界？</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">bvid</code>
+          <span class="badge-desc">BV1ABcsztEcY</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">author</code>
+          <span class="badge-desc">影视飓风</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">duration</code>
+          <span class="badge-desc">11:19</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">url</code>
+          <span class="badge-desc">https://www.bilibili.com/video/BV1ABcsztEcY</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">tags</code>
+          <span class="badge-desc">[bilibili]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 4 — QUIZ
+         ============================================================ -->
+    <div class="screen animate-in" id="s4-quiz">
+      <h2 class="screen-heading">检验一下你的理解</h2>
+
+      <p>看看你对这条命令和流水线的理解是否到位。三道情景题，每道都是你在实际使用中会遇到的真实场景。</p>
+
+      <div class="quiz-container" id="quiz-module1">
+
+        <!-- ── Q1: COMMAND FLAGS ────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="user" data-explanation-right="没错！--user 参数用于按 UP 主处理，搭配 --max 可以控制数量。就像告诉快递员：&quot;把这条街上所有住户的包裹都取来，最多 10 件。&quot;" data-explanation-wrong="处理 UP 主的视频需要用 --user 参数。--bv 只能处理单个视频，--url 是用来传完整链接或短链的。">
+          <p class="quiz-question">1. 你想处理一个 UP 主的最新 10 个视频，命令里应该用什么参数？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="bv" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>--bv</span>
+            </button>
+            <button class="quiz-option" data-value="user" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>--user &lt;UP主名称或UID&gt;</span>
+            </button>
+            <button class="quiz-option" data-value="url" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>--url &lt;视频链接&gt;</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q2: WHISPER FALLBACK ─────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="whisper" data-explanation-right="正确！当视频没有字幕时，流水线会自动下载音频，用 Whisper 模型进行语音转文字。这是流水线的"兜底机制"——保证你总能拿到文字内容。" data-explanation-wrong="流水线不会跳过或报错。它的设计是：如果没有字幕，就下载音频并用 Whisper 自动听写。这是 process_single 函数中的条件逻辑：if not subtitle_text and audio_path。">
+          <p class="quiz-question">2. 如果视频没有上传字幕，流水线会怎么做？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="skip" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>跳过字幕环节，笔记中不包含文字内容</span>
+            </button>
+            <button class="quiz-option" data-value="error" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>报错退出，提示用户手动添加字幕</span>
+            </button>
+            <button class="quiz-option" data-value="whisper" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>自动下载音频，用 Whisper 转录为文字</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q3: OUTPUT FORMAT ────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="obsidian-md" data-explanation-right="没错！流水线的最终产物是一份格式规范的 Markdown 文件，直接存入你的 Obsidian vault。打开 Obsidian 就能浏览、搜索、编辑。" data-explanation-wrong="Bilibili Notes 生成的是 Obsidian 兼容的 Markdown 文件（.md），不是 PDF 或网页。它利用 Markdown 的 frontmatter 特性和 Obsidian 的图片引用机制，实现无缝集成。">
+          <p class="quiz-question">3. 流水线的最终产出是什么格式？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="pdf" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>一份 PDF 文档，需要额外打开阅读器</span>
+            </button>
+            <button class="quiz-option" data-value="html" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>一个 HTML 网页，需要用浏览器打开</span>
+            </button>
+            <button class="quiz-option" data-value="obsidian-md" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>一份 Obsidian Markdown 文件，直接在 Obsidian 中查看</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── QUIZ CONTROLS ────────────────────────────────────── -->
+        <div>
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module1')">检查答案</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module1')">重新作答</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.module-content -->
+
+</section><!-- /#module-1 --><!-- MODULE 2: 认识幕后角色 -->
+<section class="module" id="module-2" style="background: var(--color-bg-warm)">
+
+  <div class="module-content">
+
+    <!-- ── MODULE HEADER ──────────────────────────────────────── -->
+    <header class="module-header animate-in">
+      <span class="module-number">02</span>
+      <h1 class="module-title">认识幕后角色</h1>
+      <p class="module-subtitle">每部电影都有一群各司其职的幕后工作者——导演统筹全局，场务负责后勤，摄影师捕捉画面。Bilibili Notes 也是一部"电影"，有六位核心演员。让我们认识一下他们。</p>
+    </header>
+
+    <!-- ============================================================
+         SCREEN 1 — 六位演员各司其职
+         ============================================================ -->
+    <div class="screen animate-in" id="s1-actors">
+      <h2 class="screen-heading">六位演员各司其职</h2>
+
+      <p>Bilibili Notes 的 <code>scripts/</code> 目录下有 6 个 Python 文件，每个文件就是一个"角色"，负责流水线中的一个环节。他们各有所长，互不越界。</p>
+
+      <p>用电影剧组来比喻：<span class="term" data-definition="Pipeline（流水线）是整个程序的总调度器，负责按顺序调用各个脚本。它就像电影导演，不亲自下场演戏，但决定谁该在什么时候上场。">Pipeline</span> 是导演，下面六位是剧组成员。</p>
+
+      <div class="pattern-cards stagger-children">
+
+        <!-- 1. common.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #D4A843">
+          <div class="pattern-icon" style="background:#FEF3C7;color:#D4A843">&#x1F3E0;</div>
+          <div class="pattern-title"><code>common.py</code> &mdash; 后勤管家</div>
+          <p class="pattern-desc">剧组的大管家。加载 <span class="term" data-definition="配置文件（config.yaml）存储了所有外部服务的地址、密钥、参数等设置。程序启动时读取它，就像剧组开机前先拿到通告单。">配置</span>、初始化<span class="term" data-definition="日志（logging）是程序运行时自动记录的操作痕迹。出了问题，查日志就能还原事故现场——就像飞机的黑匣子。">日志</span>、创建 <span class="term" data-definition="API 客户端是程序用来和外部服务（如 B 站服务器、AI 模型接口）通信的工具。它封装了网络请求的细节，让其他脚本不用关心底层的通信协议。">API 客户端</span>、实现自动重试。所有其他演员都依赖它提供的基础设施。</p>
+        </div>
+
+        <!-- 2. fetch_data.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #2A9D8F">
+          <div class="pattern-icon" style="background:#E6F5F3;color:#2A9D8F">&#x1F50D;</div>
+          <div class="pattern-title"><code>fetch_data.py</code> &mdash; 数据猎手</div>
+          <p class="pattern-desc">剧组的外景勘察员。调用 <span class="term" data-definition="bili CLI 是一个命令行工具，用来从 B 站服务器获取视频信息、字幕、评论等数据。fetch_data.py 通过在终端运行它来获取数据。">bili CLI</span>，从 B 站服务器拉取视频信息、字幕、评论，并下载音频文件。没有它，其他演员就没有"素材"可以加工。</p>
+        </div>
+
+        <!-- 3. extract_frames.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #E76F51">
+          <div class="pattern-icon" style="background:#FDE8E0;color:#E76F51">&#x1F3AC;</div>
+          <div class="pattern-title"><code>extract_frames.py</code> &mdash; 画面捕手</div>
+          <p class="pattern-desc">剧组的摄影师。先用 <span class="term" data-definition="yt-dlp 是一个开源的命令行工具，用于从 B 站、YouTube 等视频网站下载视频文件。它处理了各种反爬机制和格式兼容问题。">yt-dlp</span> 下载完整视频，再用 <span class="term" data-definition="ffmpeg 是一个强大的音视频处理工具。在这里它通过"场景检测"算法识别画面变化显著的瞬间，把这些关键时刻截取为静态图片。">ffmpeg</span> 进行场景检测，自动抽取最有代表性的关键帧画面。</p>
+        </div>
+
+        <!-- 4. transcribe_audio.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #2D8B55">
+          <div class="pattern-icon" style="background:#E8F5EE;color:#2D8B55">&#x1F3A4;</div>
+          <div class="pattern-title"><code>transcribe_audio.py</code> &mdash; 语音转录师</div>
+          <p class="pattern-desc">剧组的录音师。用 <span class="term" data-definition="mlx-whisper 是 Apple MLX 框架加速版的 Whisper 语音识别模型。它在本地的 Apple Silicon 芯片上运行，把音频自动转成带时间戳的文字。">mlx-whisper</span> 在本地运行语音识别，把音频文件转成带时间戳的文字转录。当视频没有字幕时，它是关键的"兜底方案"。</p>
+        </div>
+
+        <!-- 5. analyze_frames.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #7B6DAA">
+          <div class="pattern-icon" style="background:#F0EEF7;color:#7B6DAA">&#x1F441;</div>
+          <div class="pattern-title"><code>analyze_frames.py</code> &mdash; 画面解读师</div>
+          <p class="pattern-desc">剧组的剪辑师。把每一张关键帧图片发给 <span class="term" data-definition="VLM 即 Vision Language Model（视觉语言模型），是一种能"看懂"图片并用自然语言描述内容的 AI 模型。在项目中它负责为每张关键帧生成文字描述。">VLM</span>（视觉语言模型），让 AI 用文字描述画面的内容——屏幕上显示了什么、图表说明了什么、文字写了什么。</p>
+        </div>
+
+        <!-- 6. generate_notes.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #D94F30">
+          <div class="pattern-icon" style="background:#FDEEE9;color:#D94F30">&#x1F4DD;</div>
+          <div class="pattern-title"><code>generate_notes.py</code> &mdash; 笔记作家</div>
+          <p class="pattern-desc">剧组的编剧。收集所有素材——字幕、转录文本、关键帧描述、评论——交给 <span class="term" data-definition="LLM 即 Large Language Model（大语言模型），如 GPT、Claude 等。在本项目中，它负责阅读所有素材并按照预设模板生成结构化的 Markdown 笔记。">LLM</span>，按照预设模板生成结构清晰的 Obsidian Markdown 笔记。最后一棒。</p>
+        </div>
+
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F3AC;</span>
+        <div class="callout-content">
+          <span class="callout-title">剧组比喻</span>
+          <p>导演（Pipeline）统筹全局 &rarr; 场务（common.py）搭好舞台 &rarr; 外景勘察（fetch_data.py）收集素材 &rarr; 摄影师（extract_frames.py）拍关键画面 &rarr; 录音师（transcribe_audio.py）记下声音 &rarr; 剪辑师（analyze_frames.py）解读画面 &rarr; 编剧（generate_notes.py）写出成片。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 2 — 每个角色做什么
+         ============================================================ -->
+    <div class="screen animate-in" id="s2-what-they-do">
+      <h2 class="screen-heading">每个角色做什么</h2>
+
+      <p>光知道名字还不够。让我们打开每个脚本的"工作手册"——看看他们各自的核心函数长什么样，每一行代码在干什么。</p>
+
+      <!-- ── common.py: load_config ────────────────────────────── -->
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F3E0;</span>
+        <div class="callout-content">
+          <span class="callout-title">后勤管家 <code>common.py</code> &mdash; 加载配置</span>
+          <p>大管家开机做的第一件事：读取配置文件。就像剧组开机前先拿到通告单，上面写了所有服务器的地址和参数。</p>
+        </div>
+      </div>
+
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python</span>
+<span class="code-keyword">def</span> <span class="code-function">load_config</span>(config_path: <span class="code-string">str</span> | <span class="code-string">None</span> = <span class="code-keyword">None</span>) -> <span class="code-string">dict</span>:
+    path = <span class="code-function">Path</span>(config_path) <span class="code-keyword">if</span> config_path <span class="code-keyword">else</span> _PROJECT_ROOT / <span class="code-string">"config.yaml"</span>
+    <span class="code-keyword">if not</span> path.<span class="code-function">exists</span>():
+        <span class="code-keyword">raise</span> <span class="code-function">FileNotFoundError</span>(<span class="code-string">f"配置文件不存在: {path}"</span>)
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(path) <span class="code-keyword">as</span> f:
+        config = yaml.<span class="code-function">safe_load</span>(f)
+    <span class="code-keyword">if</span> env_url := os.<span class="code-function">getenv</span>(<span class="code-string">"OMLX_BASE_URL"</span>):
+        config.<span class="code-function">setdefault</span>(<span class="code-string">"omlx"</span>, {})[<span class="code-string">"base_url"</span>] = env_url
+    <span class="code-keyword">return</span> config
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>config_path</strong> &mdash; 配置文件路径，不传就用默认的 config.yaml</div>
+            <div class="tl"><strong>FileNotFoundError</strong> &mdash; 配置文件不存在就立刻报错，不让程序带着错误往下跑</div>
+            <div class="tl"><strong>yaml.safe_load</strong> &mdash; 把 YAML 文件解析成 Python 字典</div>
+            <div class="tl"><strong>env_url</strong> &mdash; 环境变量覆盖：如果设了 OMLX_BASE_URL，就用它替换配置里的地址</div>
+            <div class="tl"><strong>return config</strong> &mdash; 返回完整的配置字典，其他所有演员都要用它</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── fetch_data.py: fetch_video_info ───────────────────── -->
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F50D;</span>
+        <div class="callout-content">
+          <span class="callout-title">数据猎手 <code>fetch_data.py</code> &mdash; 获取视频信息</span>
+          <p>数据猎手收到 BV 号后，调用 bili CLI 去 B 站服务器拉取视频的基本信息——标题、作者、链接。</p>
+        </div>
+      </div>
+
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python</span>
+<span class="code-keyword">def</span> <span class="code-function">fetch_video_info</span>(bvid: <span class="code-string">str</span>) -> <span class="code-string">dict</span>:
+    data = <span class="code-function">_run_bili_yaml</span>([<span class="code-string">"video"</span>, bvid])
+    v = data.<span class="code-function">get</span>(<span class="code-string">"data"</span>, {}).<span class="code-function">get</span>(<span class="code-string">"video"</span>, {})
+    <span class="code-keyword">return</span> {
+        <span class="code-string">"bvid"</span>:   v.<span class="code-function">get</span>(<span class="code-string">"bvid"</span>, bvid),
+        <span class="code-string">"title"</span>:  v.<span class="code-function">get</span>(<span class="code-string">"title"</span>, <span class="code-string">""</span>),
+        <span class="code-string">"author"</span>: v.<span class="code-function">get</span>(<span class="code-string">"owner"</span>, {}).<span class="code-function">get</span>(<span class="code-string">"name"</span>, <span class="code-string">""</span>),
+        <span class="code-string">"url"</span>:    v.<span class="code-function">get</span>(<span class="code-string">"url"</span>, <span class="code-string">f"https://www.bilibili.com/video/{bvid}"</span>),
+    }
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>_run_bili_yaml</strong> &mdash; 调用 bili CLI 命令，传入 "video" 和 BV 号，返回 YAML 数据</div>
+            <div class="tl"><strong>.get("data", {}).get("video", {})</strong> &mdash; 安全地逐层取嵌套数据，缺了哪层都不崩溃</div>
+            <div class="tl"><strong>v.get("bvid", bvid)</strong> &mdash; 有值就用值，没有就用传入的 BV 号兜底</div>
+            <div class="tl"><strong>v.get("owner", {}).get("name")</strong> &mdash; 作者名在嵌套结构里，逐层安全取出</div>
+            <div class="tl"><strong>return dict</strong> &mdash; 返回一个干净的四字段字典：BV号、标题、作者、链接</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── extract_frames.py: extract_keyframes ─────────────── -->
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F3AC;</span>
+        <div class="callout-content">
+          <span class="callout-title">画面捕手 <code>extract_frames.py</code> &mdash; 抽取关键帧</span>
+          <p>画面捕手用 ffmpeg 做"场景检测"——当两帧画面差异超过阈值时，就认为这是一个新场景，截取那一帧。下面是函数的开头部分。</p>
+        </div>
+      </div>
+
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python</span>
+<span class="code-keyword">def</span> <span class="code-function">extract_keyframes</span>(video_path: Path, output_dir: Path, config: <span class="code-string">dict</span>) -> <span class="code-string">list</span>[Path]:
+    frames_cfg = config.<span class="code-function">get</span>(<span class="code-string">"frames"</span>, {})
+    threshold = frames_cfg.<span class="code-function">get</span>(<span class="code-string">"scene_threshold"</span>, <span class="code-number">0.3</span>)
+    max_frames = frames_cfg.<span class="code-function">get</span>(<span class="code-string">"max_frames"</span>, <span class="code-number">20</span>)
+    output_dir.<span class="code-function">mkdir</span>(parents=<span class="code-keyword">True</span>, exist_ok=<span class="code-keyword">True</span>)
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>video_path</strong> &mdash; 视频文件路径（yt-dlp 下载好的）</div>
+            <div class="tl"><strong>scene_threshold = 0.3</strong> &mdash; 场景变化阈值：0.3 表示画面变化达到 30% 就认为换了场景</div>
+            <div class="tl"><strong>max_frames = 20</strong> &mdash; 最多抽 20 帧，避免短视频也抽一堆没意义的图</div>
+            <div class="tl"><strong>mkdir(parents=True)</strong> &mdash; 自动创建输出目录，包括所有不存在的父目录</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F4A1;</span>
+        <div class="callout-content">
+          <span class="callout-title">代码模式观察</span>
+          <p>你有没有注意到三个函数的共同点？它们都在用 <code>.get(key, default)</code> 做防御性取值——有值就用，没有就用默认值。这是"永不崩溃"哲学的基石。后面模块会详细讲。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 3 — 他们如何协作
+         ============================================================ -->
+    <div class="screen animate-in" id="s3-collaboration">
+      <h2 class="screen-heading">他们如何协作</h2>
+
+      <p>六个角色不是各干各的。Pipeline（导演）在<span class="term" data-definition="群聊（Group Chat）在这里是一个比喻：Pipeline 像一个项目经理在团队群里发指令，@不同的人去干活，然后每个人在群里汇报进度。">团队群聊</span>里发指令、分配任务、收集结果。点击"下一步"，看他们如何配合完成一次完整的流水线。</p>
+
+      <!-- ── GROUP CHAT ANIMATION ──────────────────────────────── -->
+      <div class="chat-window" id="chat-module2">
+
+        <!-- MESSAGES (hidden by default, revealed by JS engine) -->
+        <div class="chat-messages">
+
+          <div class="chat-message" data-sender="Pipeline" style="display:none">
+            <div class="chat-avatar" style="background:#D94F30">P</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#D94F30">Pipeline (导演)</span>
+              <p>开始处理 BV1ABcsztEcY！DataHunter，去拿数据！</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="DataHunter" style="display:none">
+            <div class="chat-avatar" style="background:#2A9D8F">D</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#2A9D8F">DataHunter (数据猎手)</span>
+              <p>收到！正在调用 bili CLI 获取视频信息、字幕和评论...</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="DataHunter" style="display:none">
+            <div class="chat-avatar" style="background:#2A9D8F">D</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#2A9D8F">DataHunter (数据猎手)</span>
+              <p>数据拿到了！字幕可用，音频也下载好了。</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="Pipeline" style="display:none">
+            <div class="chat-avatar" style="background:#D94F30">P</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#D94F30">Pipeline (导演)</span>
+              <p>FrameCatcher，该你上场了！用 ffmpeg 抽关键帧。</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="FrameCatcher" style="display:none">
+            <div class="chat-avatar" style="background:#E76F51">F</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#E76F51">FrameCatcher (画面捕手)</span>
+              <p>场景检测完成，抽到 15 帧关键画面！</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="Pipeline" style="display:none">
+            <div class="chat-avatar" style="background:#D94F30">P</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#D94F30">Pipeline (导演)</span>
+              <p>NoteWriter，所有材料都齐了——字幕、帧描述、评论。生成笔记吧！</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="NoteWriter" style="display:none">
+            <div class="chat-avatar" style="background:#D94F30">N</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#D94F30">NoteWriter (笔记作家)</span>
+              <p>笔记已生成！保存到 Obsidian vault 了。</p>
+            </div>
+          </div>
+
+        </div><!-- /.chat-messages -->
+
+        <!-- TYPING INDICATOR -->
+        <div class="chat-typing" style="display:none">
+          <div class="chat-avatar" id="chat-module2-typing-avatar" style="background:#D94F30">P</div>
+          <div class="chat-typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="chat-controls">
+          <button class="btn btn-primary chat-next-btn">下一步</button>
+          <button class="btn chat-all-btn">全部播放</button>
+          <button class="btn chat-reset-btn">重置</button>
+          <span class="chat-progress">0 / 7 messages</span>
+        </div>
+
+      </div><!-- /.chat-window -->
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4AC;</span>
+        <div class="callout-content">
+          <span class="callout-title">协作的关键</span>
+          <p>注意对话中 Pipeline 从不自己干活——它只发指令、收集结果。每个角色拿到指令后独立完成自己的任务，然后把结果"传"给下一个角色。这就是<span class="term" data-definition="模块化（Modularity）是把一个大系统拆成多个独立小模块的设计原则。每个模块只负责一件事，通过明确定义的接口互相协作。好处是：改一个模块不影响其他模块。">模块化</span>设计的精髓。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 4 — QUIZ
+         ============================================================ -->
+    <div class="screen animate-in" id="s4-quiz">
+      <h2 class="screen-heading">检验一下你的理解</h2>
+
+      <p>三道情景题。每个场景模拟你实际开发中会遇到的需求变更——你需要判断该去找哪个"角色"。</p>
+
+      <div class="quiz-container" id="quiz-module2">
+
+        <!-- ── Q1 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="common" data-explanation-right="没错！日志格式、API 客户端、重试机制、配置加载——这些"基础设施"都由 common.py 提供。改日志格式，找后勤管家就对了。" data-explanation-wrong="日志格式属于基础设施，由 common.py 统一管理。fetch_data.py 只负责调用 bili CLI，不管日志怎么打。">
+          <p class="quiz-question">1. 你想修改程序的日志输出格式（比如加上时间戳），应该改哪个文件？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="fetch_data" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>fetch_data.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="common" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>common.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="pipeline" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>pipeline.py</code></span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q2 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="fetch_data" data-explanation-right="正确！bili CLI 返回的数据格式变了，负责"翻译"它的就是 fetch_data.py。你需要在 _run_bili_yaml 返回后的数据处理逻辑中适配新格式。" data-explanation-wrong="bili CLI 的数据是由 fetch_data.py 调用和解析的。如果返回格式变了，需要修改 fetch_data.py 中 _run_bili_yaml 之后的数据提取逻辑。common.py 只管基础设施，不处理业务数据。">
+          <p class="quiz-question">2. B 站更新了 API，bili CLI 返回了新格式的数据。你需要适配这个变化，该改哪个文件？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="common" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>common.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="fetch_data" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>fetch_data.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="generate_notes" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>generate_notes.py</code></span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q3 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="generate_notes" data-explanation-right="没错！generate_notes.py 负责调用 LLM 生成笔记。换成新的 AI 模型，只需修改这里的模型调用配置。其他脚本完全不受影响——这就是模块化的好处。" data-explanation-wrong="AI 模型生成笔记的逻辑在 generate_notes.py 中。analyze_frames.py 用的是视觉模型（VLM），而最终生成 Markdown 笔记的 LLM 调用在 generate_notes.py 里。">
+          <p class="quiz-question">3. 你想把生成笔记用的 AI 模型从 GPT 换成 Claude，应该改哪个文件？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="analyze_frames" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>analyze_frames.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="common" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>common.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="generate_notes" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>generate_notes.py</code></span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── QUIZ CONTROLS ────────────────────────────────────── -->
+        <div>
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module2')">检查答案</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module2')">重新作答</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.module-content -->
+
+</section><!-- /#module-2 --><section class="module" id="module-3" style="background: var(--color-bg)">
+  <div class="module-content">
+
+    <header class="module-header animate-in">
+      <span class="module-number">03</span>
+      <h1 class="module-title">数据如何流转</h1>
+      <p class="module-subtitle">追踪一条视频数据从输入到最终笔记的完整旅程，理解每个环节传递了什么。</p>
+    </header>
+
+    <!-- ========== Screen 1: 一条视频数据的完整旅程 ========== -->
+    <section class="screen animate-in">
+      <h2 class="screen-heading">一条视频数据的完整旅程</h2>
+      <p>把整个<span class="term" data-definition="Pipeline：将数据从输入逐步处理到输出的自动化流程，像工厂流水线一样">管线</span>想象成一场<span class="term" data-definition="接力赛：每个选手接棒后完成自己的赛段，再把棒交给下一位——函数就是选手，数据就是接力棒">接力赛</span>。数据是接力棒，每个函数是一位选手。</p>
+
+      <div class="step-cards animate-in stagger-children">
+        <div class="step-card animate-in">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>用户输入 BV号</strong>
+            <p><span class="term" data-definition="resolve_input() 负责把用户输入的 URL、BV号或UP主名统一解析成标准的 BV 号列表">resolve_input()</span> 解析输入，提取出 BV 标识符</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>汇聚原始素材</strong>
+            <p><span class="term" data-definition="fetch_all() 一次性获取：视频元信息、字幕文本、评论列表、音频文件路径">fetch_all()</span> 收集视频信息、字幕文本、评论列表、音频路径</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>没有字幕？听写出来</strong>
+            <p>若视频无字幕，<span class="term" data-definition="transcribe() 使用 Whisper 模型把音频文件转成文字，是整个管线中最耗时的步骤">transcribe()</span> 将音频转为文字</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>抽取关键帧图片</strong>
+            <p><span class="term" data-definition="extract_keyframes() 根据画面场景变化程度，用 ffmpeg 从视频中截取关键画面保存为 PNG 图片">extract_keyframes()</span> 分析画面变化，截取关键帧</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>理解每一帧画面</strong>
+            <p><span class="term" data-definition="analyze_frames() 调用视觉语言模型 VLM，为每一帧图片生成一句中文描述">analyze_frames()</span> 用视觉模型给每帧生成文字描述</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <strong>合成最终笔记</strong>
+            <p><span class="term" data-definition="generate_note() 把字幕、评论、帧描述等所有素材交给大语言模型 LLM，生成结构化 Markdown 笔记">generate_note()</span> 将所有素材交给 LLM 生成 Markdown</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">7</div>
+          <div class="step-body">
+            <strong>存入 Obsidian 仓库</strong>
+            <p>笔记文件保存到 <span class="term" data-definition="Obsidian vault：本地 Markdown 知识库目录，所有笔记以 .md 文件形式存储">Obsidian vault</span>，流程结束</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent animate-in">
+        <div class="callout-icon">💡</div>
+        <div class="callout-content">
+          <strong class="callout-title">接力赛比喻</strong>
+          <p>每个函数是一位选手。选手 1 把棒交给选手 2，选手 2 跑完自己的赛段再交给下一位。<span class="term" data-definition="配置文件就像教练的战术板，告诉每个选手该怎么跑——用什么模型、保存到哪个目录、截多少帧">配置文件</span>则是教练的战术板。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Screen 2: 配置文件是控制中心 ========== -->
+    <section class="screen animate-in">
+      <h2 class="screen-heading">配置文件是控制中心</h2>
+      <p><code>config.yaml</code> 告诉每位选手该怎么跑，<code>get_llm_client()</code> 负责根据战术派出对应选手。</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">YAML</span>
+          <pre><code>
+<span class="code-line"><span class="code-keyword">omlx:</span></span>
+<span class="code-line">  <span class="code-property">base_url:</span> <span class="code-string">"http://localhost:8000/v1"</span></span>
+<span class="code-line">  <span class="code-property">llm_model:</span> <span class="code-string">"Qwen3.6-35B-A3B-nvfp4"</span></span>
+<span class="code-line">  <span class="code-property">vlm_model:</span> <span class="code-string">"Qwen3-VL-8B-Instruct-MLX-4bit"</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-keyword">obsidian:</span></span>
+<span class="code-line">  <span class="code-property">vault_path:</span> <span class="code-string">"~/Documents/Bilibili/Bilibili"</span></span>
+<span class="code-line">  <span class="code-property">notes_dir:</span> <span class="code-string">"video-notes"</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-keyword">frames:</span></span>
+<span class="code-line">  <span class="code-property">scene_threshold:</span> <span class="code-number">0.3</span></span>
+<span class="code-line">  <span class="code-property">max_frames:</span> <span class="code-number">20</span></span>
+          </code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <p class="tl">本地 AI 服务的地址和两个模型名称：</p>
+            <p class="tl">llm_model = 负责写笔记的文本选手</p>
+            <p class="tl">vlm_model = 负责看图的视觉选手</p>
+            <p class="tl">&nbsp;</p>
+            <p class="tl">笔记保存到哪里——vault_path 是根目录</p>
+            <p class="tl">notes_dir 是笔记子文件夹</p>
+            <p class="tl">&nbsp;</p>
+            <p class="tl">抽帧策略：scene_threshold 越小越敏感</p>
+            <p class="tl">max_frames = 最多截 20 张关键帧图片</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">PYTHON</span>
+          <pre><code>
+<span class="code-line"><span class="code-keyword">def</span> <span class="code-function">get_llm_client</span>(config, provider=None):</span>
+<span class="code-line">    provider = provider <span class="code-keyword">or</span> config.get(<span class="code-string">"provider"</span>)</span>
+<span class="code-line">    <span class="code-keyword">if</span> provider == <span class="code-string">"minimax"</span>:</span>
+<span class="code-line">        client = <span class="code-function">Anthropic</span>(base_url=..., api_key=...)</span>
+<span class="code-line">        <span class="code-keyword">return</span> client, model, <span class="code-string">"anthropic"</span></span>
+<span class="code-line">    <span class="code-keyword">else</span>:</span>
+<span class="code-line">        client = <span class="code-function">OpenAI</span>(base_url=config[<span class="code-string">"omlx"</span>][<span class="code-string">"base_url"</span>])</span>
+<span class="code-line">        <span class="code-keyword">return</span> client, model, <span class="code-string">"openai"</span></span>
+          </code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <p class="tl">检查用哪个 AI 服务——默认读配置文件</p>
+            <p class="tl">如果选了 MiniMax 云端服务：</p>
+            <p class="tl">用 Anthropic 格式的 API 连接远程服务器</p>
+            <p class="tl">返回客户端、模型名、API 类型</p>
+            <p class="tl">否则用本地 oMLX 服务：</p>
+            <p class="tl">用 OpenAI 格式的 API 连接本地服务</p>
+            <p class="tl">返回客户端、模型名、API 类型</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info animate-in">
+        <div class="callout-icon">🔑</div>
+        <div class="callout-content">
+          <strong class="callout-title">分层解耦</strong>
+          <p>配置文件和代码是分层解耦的。改模型只需改 YAML，不用动代码；换服务商只需改 <code>provider</code> 字符串，<code>get_llm_client()</code> 自动适配。给 AI 下指令时可以说：<em>"实现分层配置，运行时根据 provider 字符串切换 API 客户端。"</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Screen 3: 数据在函数之间传递 ========== -->
+    <section class="screen animate-in">
+      <h2 class="screen-heading">数据在函数之间传递</h2>
+      <p>点击 <strong>Next Step</strong>，观看接力棒如何从一位选手传到下一位。</p>
+
+      <div class="flow-animation animate-in" data-steps="[{&quot;highlight&quot;:&quot;flow-actor-1&quot;,&quot;label&quot;:&quot;resolve_input() 解析用户输入，提取 BV号&quot;},{&quot;highlight&quot;:&quot;flow-actor-1&quot;,&quot;label&quot;:&quot;传递 BV号给数据采集&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-1&quot;,&quot;to&quot;:&quot;actor-2&quot;},{&quot;highlight&quot;:&quot;flow-actor-2&quot;,&quot;label&quot;:&quot;fetch_all() 并行获取视频信息、字幕、评论、音频&quot;},{&quot;highlight&quot;:&quot;flow-actor-2&quot;,&quot;label&quot;:&quot;无字幕？把音频发给转录&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-2&quot;,&quot;to&quot;:&quot;actor-3&quot;},{&quot;highlight&quot;:&quot;flow-actor-3&quot;,&quot;label&quot;:&quot;transcribe() 将音频转为文字&quot;},{&quot;highlight&quot;:&quot;flow-actor-3&quot;,&quot;label&quot;:&quot;ffmpeg 场景检测抽取关键帧&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-3&quot;,&quot;to&quot;:&quot;actor-4&quot;},{&quot;highlight&quot;:&quot;flow-actor-4&quot;,&quot;label&quot;:&quot;extract_keyframes() 截取关键帧图片&quot;},{&quot;highlight&quot;:&quot;flow-actor-4&quot;,&quot;label&quot;:&quot;帧图片发给视觉模型分析&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-4&quot;,&quot;to&quot;:&quot;actor-5&quot;},{&quot;highlight&quot;:&quot;flow-actor-5&quot;,&quot;label&quot;:&quot;analyze_frames() 视觉模型描述每帧内容&quot;},{&quot;highlight&quot;:&quot;flow-actor-5&quot;,&quot;label&quot;:&quot;所有素材汇总给笔记生成&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-5&quot;,&quot;to&quot;:&quot;actor-6&quot;},{&quot;highlight&quot;:&quot;flow-actor-6&quot;,&quot;label&quot;:&quot;generate_note() LLM 生成 Markdown，保存到 Obsidian&quot;}]">
+        <div class="flow-actors">
+          <div class="flow-actor" id="flow-actor-1">
+            <div class="flow-actor-icon">🔍</div>
+            <span>resolve_input</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-2">
+            <div class="flow-actor-icon">📦</div>
+            <span>fetch_all</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-3">
+            <div class="flow-actor-icon">🎙️</div>
+            <span>transcribe</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-4">
+            <div class="flow-actor-icon">🎬</div>
+            <span>extract_keyframes</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-5">
+            <div class="flow-actor-icon">👁️</div>
+            <span>analyze_frames</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-6">
+            <div class="flow-actor-icon">📝</div>
+            <span>generate_note</span>
+          </div>
+        </div>
+
+        <div class="flow-packet" id="flow-packet"></div>
+
+        <div class="flow-step-label" id="flow-label">Click &quot;Next Step&quot; to begin</div>
+
+        <div class="flow-controls">
+          <button class="btn flow-next-btn">Next Step</button>
+          <button class="btn flow-reset-btn">Restart</button>
+          <span class="flow-progress"></span>
+        </div>
+      </div>
+
+      <div class="pattern-cards animate-in">
+        <div class="pattern-card" style="border-top: 3px solid var(--color-actor-2)">
+          <div class="pattern-icon" style="background: var(--color-actor-2)">📦</div>
+          <h4 class="pattern-title">字典 (dict)</h4>
+          <p class="pattern-desc">fetch_all 返回的数据容器——像一份打包清单，里面装着视频信息、字幕、评论等不同类型的数据。</p>
+        </div>
+        <div class="pattern-card" style="border-top: 3px solid var(--color-actor-4)">
+          <div class="pattern-icon" style="background: var(--color-actor-4)">🎬</div>
+          <h4 class="pattern-title">文件路径 (Path)</h4>
+          <p class="pattern-desc">extract_keyframes 返回的是 PNG 图片文件路径列表——每张图片对应视频中的一个关键时刻。</p>
+        </div>
+        <div class="pattern-card" style="border-top: 3px solid var(--color-actor-5)">
+          <div class="pattern-icon" style="background: var(--color-actor-5)">👁️</div>
+          <h4 class="pattern-title">描述字符串 (str)</h4>
+          <p class="pattern-desc">analyze_frames 给每帧加上文字描述——从图片到文字，让 LLM 能够理解画面的内容。</p>
+        </div>
+        <div class="pattern-card" style="border-top: 3px solid var(--color-actor-6)">
+          <div class="pattern-icon" style="background: var(--color-actor-6)">📝</div>
+          <h4 class="pattern-title">Markdown 文件</h4>
+          <p class="pattern-desc">最终产物——一份结构化的 .md 文件，直接保存到 Obsidian vault 中供阅读和搜索。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Screen 4: 测验 ========== -->
+    <section class="screen animate-in">
+      <h2 class="screen-heading">模块测验</h2>
+      <p>检验你对数据流和配置系统的理解。</p>
+
+      <div class="quiz-container" id="quiz-module3">
+
+        <div class="quiz-question-block"
+             data-correct="option-b"
+             data-explanation-right="正确！scene_threshold 越小，场景变化检测越敏感，即使很小的画面变化也会被截取，所以抽出更多帧。"
+             data-explanation-wrong="不对。scene_threshold 是场景变化阈值——值越小检测越灵敏，抽出的帧越多。想想调低灵敏度会让相机多拍还是少拍？">
+          <h3 class="quiz-question">如果把 config.yaml 中的 scene_threshold 从 0.3 改为 0.1，会发生什么？</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>抽更少的帧（画面变化不够大就不截）</span>
+            </button>
+            <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>抽更多的帧（更小的变化也会被检测到）</span>
+            </button>
+            <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>没有影响，这个参数只影响画质</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block"
+             data-correct="option-c"
+             data-explanation-right="没错！oMLX 是本地推理服务，帧分析和笔记生成都需要调用 LLM/VLM。服务没启动时，resolve_input 和 fetch_all 可以正常运行，但到了需要 AI 的步骤就会报错。"
+             data-explanation-wrong="再想想。oMLX 是本地推理服务，resolve_input 和 fetch_all 只调 Bilibili API 不需要 oMLX，但帧分析和笔记生成都需要 LLM/VLM 服务。">
+          <h3 class="quiz-question">假设 oMLX 本地服务没有启动，管线会卡在哪一步？</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>第一步 resolve_input()——它需要模型来解析输入</span>
+            </button>
+            <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>第二步 fetch_all()——获取视频信息需要 LLM</span>
+            </button>
+            <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>帧分析或笔记生成——它们依赖 oMLX 提供的 LLM/VLM 服务</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block"
+             data-correct="option-b"
+             data-explanation-right="完全正确！get_llm_client() 通过 if/else 判断 provider 字符串——等于 minimax 走 Anthropic SDK，否则走 OpenAI SDK 连接本地 oMLX。"
+             data-explanation-wrong="不是这样。看 get_llm_client() 的代码：它检查 provider 参数的值——如果是 minimax 就创建 Anthropic 客户端，否则创建 OpenAI 客户端。这是简单的字符串分支判断。">
+          <h3 class="quiz-question">当 provider 设为 &quot;minimax&quot; 时，代码如何决定使用哪个 API？</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>通过 try/except 自动检测哪个 API 可用</span>
+            </button>
+            <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>get_llm_client() 根据 provider 字符串做 if/else 分支选择</span>
+            </button>
+            <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>配置文件中直接写死了 API 地址和密钥</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('quiz-module3')">Check Answers</button>
+        <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module3')">Try Again</button>
+      </div>
+    </section>
+
+  </div>
+</section>
+<!-- MODULE 4: 连接外部世界 -->
+<section class="module" id="module-4" style="background: var(--color-bg-warm)">
+
+  <div class="module-content">
+
+    <!-- ── MODULE HEADER ──────────────────────────────────────── -->
+    <header class="module-header animate-in">
+      <span class="module-number">04</span>
+      <h1 class="module-title">连接外部世界</h1>
+      <p class="module-subtitle">想象你是一个自由职业团队的负责人。团队里有程序员、设计师、翻译……每个人自带工具箱。你不需要自己造工具，但你必须知道——该找谁、用什么工具、如果工具坏了怎么办。</p>
+    </header>
+
+    <!-- ============================================================
+         SCREEN 1 — 五个外部伙伴
+         ============================================================ -->
+    <div class="screen animate-in" id="s1-partners">
+      <h2 class="screen-heading">五个外部伙伴</h2>
+
+      <p>Bilibili Notes 不从零造轮子——它像一个精明的<span class="term" data-definition="项目外包：把专业的工作交给专业的工具去做。你不用自己实现视频下载，yt-dlp 已经做得很好了。你只需要知道怎么调用它。">项目外包商</span>，把专业的工作交给专业的工具。点击每个伙伴，看看他们各自带来什么本事。</p>
+
+      <!-- ── ARCHITECTURE DIAGRAM ─────────────────────────────── -->
+      <div class="arch-diagram animate-in">
+
+        <div class="arch-zone" style="border-top: 3px solid #2A9D8F">
+          <div class="arch-zone-label" style="color: #2A9D8F">命令行工具</div>
+
+          <div class="arch-component" data-desc="bili (bilibili-cli)：B站数据入口——获取视频信息、字幕、评论、下载音频。需要预先登录（bili login）。通过 subprocess.run() 在子进程中调用，返回 YAML/JSON 数据。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#2A9D8F">&#x1F4E5;</span>
+            <span class="arch-component-name">bili</span>
+            <span class="arch-component-tag">B站数据入口</span>
+          </div>
+
+          <div class="arch-component" data-desc="ffmpeg：视频处理瑞士军刀——通过场景变化检测算法（scene detection）抽取关键帧。当两帧画面差异超过阈值时，自动截取那一帧。它不是用 Python 写的，而是被 subprocess.run() 调用的外部命令。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#E76F51">&#x1F3AC;</span>
+            <span class="arch-component-name">ffmpeg</span>
+            <span class="arch-component-tag">视频处理</span>
+          </div>
+
+          <div class="arch-component" data-desc="yt-dlp：视频下载神器——从B站下载完整视频文件到本地。处理了各种反爬机制和格式兼容问题。下载的视频交给 ffmpeg 做场景检测。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#D4A843">&#x2B07;&#xFE0F;</span>
+            <span class="arch-component-name">yt-dlp</span>
+            <span class="arch-component-tag">视频下载</span>
+          </div>
+        </div>
+
+        <div class="arch-zone" style="border-top: 3px solid #7B6DAA">
+          <div class="arch-zone-label" style="color: #7B6DAA">AI 模型服务</div>
+
+          <div class="arch-component" data-desc="oMLX (本地)：Mac 本地模型服务——通过 OpenAI 兼容 API 提供 VLM（看图说话）和 LLM（生成笔记）能力。运行在 localhost:8000，无需联网，无需付费。缺点是模型能力有限，中文笔记质量可能不如云端。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#7B6DAA">&#x1F3E0;</span>
+            <span class="arch-component-name">oMLX</span>
+            <span class="arch-component-tag">本地模型</span>
+          </div>
+
+          <div class="arch-component" data-desc="MiniMax (云端)：在线 AI 服务——使用 Anthropic 兼容 API（Claude 格式）。质量更高但需网络连接和付费 API key。配置文件中 provider 字段控制使用哪个服务商。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#D94F30">&#x2601;&#xFE0F;</span>
+            <span class="arch-component-name">MiniMax</span>
+            <span class="arch-component-tag">云端AI</span>
+          </div>
+        </div>
+
+        <div class="arch-zone" style="border-top: 3px solid #2D8B55">
+          <div class="arch-zone-label" style="color: #2D8B55">本地工具</div>
+
+          <div class="arch-component" data-desc="mlx-whisper：Apple Silicon 语音转文字引擎——在 Mac 本地 GPU 上运行 Whisper 模型，把音频文件转成带时间戳的文字。无需联网，速度极快。当视频没有字幕时，它是关键的后备方案。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#2D8B55">&#x1F399;&#xFE0F;</span>
+            <span class="arch-component-name">mlx-whisper</span>
+            <span class="arch-component-tag">语音转文字</span>
+          </div>
+        </div>
+
+        <div class="arch-zone" style="border-top: 3px solid #D4A843">
+          <div class="arch-zone-label" style="color: #D4A843">笔记系统</div>
+
+          <div class="arch-component" data-desc="Obsidian：知识管理工具——最终笔记的保存地。其实只是本地文件系统中的一个 Markdown 文件夹。程序用 Path.write_text() 写入 .md 文件和图片，Obsidian 自动识别并展示。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#D4A843">&#x1F4DD;</span>
+            <span class="arch-component-name">Obsidian</span>
+            <span class="arch-component-tag">知识管理</span>
+          </div>
+        </div>
+
+        <div class="arch-description" id="arch-desc">
+          <p style="color:var(--color-text-muted);font-style:italic">点击上方任意组件，查看它的角色描述。</p>
+        </div>
+
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F465;</span>
+        <div class="callout-content">
+          <span class="callout-title">自由职业团队比喻</span>
+          <p>你（Pipeline）是团队负责人。bili 是跑腿的快递员，ffmpeg 是摄影师，yt-dlp 是搬运工，oMLX/MiniMax 是翻译官，mlx-whisper 是速记员，Obsidian 是档案柜。你不亲自下场——你只负责在正确的时间找正确的人。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 2 — API 客户端：与外部服务沟通的翻译官
+         ============================================================ -->
+    <div class="screen animate-in" id="s2-api-client">
+      <h2 class="screen-heading">API 客户端——与外部服务沟通的翻译官</h2>
+
+      <p>团队里有说中文的，有说英文的。<span class="term" data-definition="API 客户端就像一个翻译官，它把你程序的请求翻译成外部服务能听懂的语言（HTTP 请求），再把外部服务的回复翻译回你的程序能理解的数据格式。">API 客户端</span>就是那个翻译官——它知道怎么跟本地 oMLX 说 OpenAI 方言，也知道怎么跟云端 MiniMax 说 Anthropic 方言。</p>
+
+      <p>先看"翻译官的调度中心"——<code>get_llm_client()</code>：</p>
+
+      <!-- ── CODE TRANSLATION: get_llm_client ───────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; common.py</span>
+<span class="code-keyword">def</span> <span class="code-function">get_llm_client</span>(config: <span class="code-string">dict</span>,
+                         provider: <span class="code-string">str</span> | <span class="code-string">None</span> = <span class="code-keyword">None</span>):
+    provider = provider <span class="code-keyword">or</span> config.<span class="code-function">get</span>(<span class="code-string">"provider"</span>, <span class="code-string">"omlx"</span>)
+    <span class="code-keyword">if</span> provider == <span class="code-string">"minimax"</span>:
+        mm = config[<span class="code-string">"minimax"</span>]
+        api_key = os.<span class="code-function">getenv</span>(mm[<span class="code-string">"api_key_env"</span>], <span class="code-string">""</span>)
+        client = <span class="code-function">Anthropic</span>(
+            base_url=mm[<span class="code-string">"base_url"</span>],
+            api_key=api_key
+        )
+        <span class="code-keyword">return</span> client, mm[<span class="code-string">"model"</span>], <span class="code-string">"anthropic"</span>
+    <span class="code-keyword">else</span>:
+        client = <span class="code-function">OpenAI</span>(
+            base_url=config[<span class="code-string">"omlx"</span>][<span class="code-string">"base_url"</span>],
+            api_key=config[<span class="code-string">"omlx"</span>].<span class="code-function">get</span>(<span class="code-string">"api_key"</span>, <span class="code-string">""</span>),
+        )
+        <span class="code-keyword">return</span> client, config[<span class="code-string">"omlx"</span>][<span class="code-string">"llm_model"</span>], <span class="code-string">"openai"</span></div>
+        <div class="translation-english">
+          <span class="translation-label">逐行白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>get_llm_client(config, provider)</strong> &mdash; 翻译官的调度中心：根据配置选出正确的翻译方式</div>
+            <div class="tl"><strong>provider = provider or config.get(...)</strong> &mdash; 优先用传入的参数，没有就看配置文件，都没有就默认用 omlx（本地）</div>
+            <div class="tl"><strong>if provider == "minimax"</strong> &mdash; 走云端路线：创建 Anthropic 客户端</div>
+            <div class="tl"><strong>os.getenv(mm["api_key_env"])</strong> &mdash; 从环境变量取 API 密钥（不硬编码在代码里）</div>
+            <div class="tl"><strong>Anthropic(base_url=..., api_key=...)</strong> &mdash; 用 Anthropic SDK 创建客户端，连接 MiniMax 服务</div>
+            <div class="tl"><strong>return (client, model, "anthropic")</strong> &mdash; 返回三元组：客户端对象、模型名、API 协议类型</div>
+            <div class="tl"><strong>else: OpenAI(base_url=...)</strong> &mdash; 走本地路线：用 OpenAI SDK 连接 oMLX 服务</div>
+            <div class="tl"><strong>return (client, model, "openai")</strong> &mdash; 本地服务也返回三元组，协议类型标记为 openai</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F517;</span>
+        <div class="callout-content">
+          <span class="callout-title">为什么用两种不同的 SDK？</span>
+          <p>oMLX 本地服务实现了 <span class="term" data-definition="OpenAI API 是 OpenAI 公司定义的一套 HTTP 接口规范。很多其他 AI 服务（包括本地的 oMLX）也实现了这套规范，这样使用 OpenAI SDK 的代码就能无缝对接。">OpenAI 兼容接口</span>，所以用 <code>OpenAI</code> SDK 连接。MiniMax 云端服务实现了 <span class="term" data-definition="Anthropic API 是 Anthropic 公司（Claude 的开发商）定义的 HTTP 接口规范。MiniMax 服务兼容这套规范，所以用 Anthropic SDK 调用。">Anthropic 兼容接口</span>，所以用 <code>Anthropic</code> SDK 连接。这就是为什么 <code>get_llm_client()</code> 返回的第三个值是协议类型——调用方需要知道该用哪种消息格式。</p>
+        </div>
+      </div>
+
+      <p>再看"快递员的应急预案"——当 bili CLI 被限流时怎么重试：</p>
+
+      <!-- ── CODE TRANSLATION: _run_bili ────────────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; fetch_data.py</span>
+<span class="code-keyword">def</span> <span class="code-function">_run_bili</span>(args: <span class="code-string">list</span>[<span class="code-string">str</span>], retries: <span class="code-string">int</span> = <span class="code-value">3</span>) -> <span class="code-string">str</span>:
+    <span class="code-keyword">for</span> attempt <span class="code-keyword">in</span> <span class="code-function">range</span>(retries):
+        result = subprocess.<span class="code-function">run</span>(
+            [<span class="code-string">"bili"</span>, *args],
+            capture_output=<span class="code-value">True</span>, text=<span class="code-value">True</span>,
+        )
+        combined = (result.stdout + result.stderr).<span class="code-function">lower</span>()
+        <span class="code-keyword">if</span> result.returncode == <span class="code-value">0</span> \
+           <span class="code-keyword">and</span> <span class="code-string">"412"</span> <span class="code-keyword">not in</span> combined:
+            <span class="code-keyword">return</span> result.stdout
+        <span class="code-keyword">if</span> <span class="code-string">"412"</span> <span class="code-keyword">in</span> combined:
+            wait = <span class="code-value">5</span> * (attempt + <span class="code-value">1</span>)
+            logger.<span class="code-function">warning</span>(<span class="code-string">"bili 412 限流，等待 %ds"</span>, wait)
+            time.<span class="code-function">sleep</span>(wait)
+            <span class="code-keyword">continue</span></div>
+        <div class="translation-english">
+          <span class="translation-label">逐行白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>_run_bili(args, retries=3)</strong> &mdash; 调用 bili 命令行工具的包装函数，最多重试 3 次</div>
+            <div class="tl"><strong>subprocess.run(["bili", *args])</strong> &mdash; 在子进程中执行 bili 命令，捕获输出</div>
+            <div class="tl"><strong>combined = stdout + stderr</strong> &mdash; 把标准输出和错误输出合并，统一检查</div>
+            <div class="tl"><strong>returncode == 0 and "412" not in combined</strong> &mdash; 成功且没有被限流？直接返回结果</div>
+            <div class="tl"><strong>if "412" in combined</strong> &mdash; 被B站限流了（<span class="term" data-definition="HTTP 412 Precondition Failed：B站 API 返回的状态码，表示请求频率过高，触发了反爬机制。需要等待一段时间后重试。">412</span> 状态码）？</div>
+            <div class="tl"><strong>wait = 5 * (attempt + 1)</strong> &mdash; 等待时间线性递增：第1次等5秒，第2次等10秒，第3次等15秒</div>
+            <div class="tl"><strong>logger.warning(...)</strong> &mdash; 把限流事件记到日志里——这是黑匣子的关键记录</div>
+            <div class="tl"><strong>time.sleep(wait) + continue</strong> &mdash; 等一等，回去再试一次</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F504;</span>
+        <div class="callout-content">
+          <span class="callout-title">两个关键的通信模式</span>
+          <p><strong>模式一：API 客户端模式</strong>（get_llm_client）——用 SDK 对象封装 HTTP 请求，代码更简洁。<strong>模式二：子进程模式</strong>（_run_bili）——用 subprocess.run() 调用外部命令行工具，拿到文本输出后自己解析。选择哪种取决于外部工具的形态：有 SDK 就用 SDK，是命令行工具就用子进程。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 3 — 每种外部工具都可能失败
+         ============================================================ -->
+    <div class="screen animate-in" id="s3-failure-modes">
+      <h2 class="screen-heading">每种外部工具都可能失败</h2>
+
+      <p>团队里每个人都有可能"掉链子"。快递员可能被门卫拦住，摄影师可能忘带镜头，翻译官可能突然失联。好的项目负责人不为每个风险焦虑——而是为每种失败<span class="term" data-definition="预案（Fallback Plan）：在主方案失败时自动启用的备选方案。就像飞机有备用引擎，软件也需要备用路径。">准备预案</span>。</p>
+
+      <p>点击每张卡片，看看当外部工具"掉链子"时，流水线是怎么应对的：</p>
+
+      <!-- ── FAILURE PATTERN CARDS ─────────────────────────────── -->
+      <div class="pattern-cards stagger-children">
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #E76F51">
+          <div class="pattern-icon" style="background:#FDE8E0;color:#E76F51">&#x26A0;&#xFE0F;</div>
+          <div class="pattern-title">bili CLI 412 限流</div>
+          <p class="pattern-desc"><strong>症状：</strong>B站服务器返回 <span class="term" data-definition="412 状态码表示 B站认为你请求太频繁了，触发了速率限制（rate limiting）。这是一种常见的反爬机制。">412 状态码</span>，请求被拒绝。</p>
+          <p class="pattern-desc"><strong>应对：</strong><code>_run_bili()</code> 自动重试最多 3 次，等待时间<strong>线性递增</strong>（5s、10s、15s）。每次重试都记录 warning 日志。3 次都失败才抛异常。</p>
+          <p class="pattern-desc" style="color:var(--color-success);font-weight:600">&#x2713; 自动恢复，用户无感知</p>
+        </div>
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #D4A843">
+          <div class="pattern-icon" style="background:#FEF3C7;color:#D4A843">&#x1F4F7;</div>
+          <div class="pattern-title">ffmpeg 场景检测 0 帧</div>
+          <p class="pattern-desc"><strong>症状：</strong>ffmpeg 跑完了但没检测到任何场景变化，返回 0 张关键帧。可能是视频画面几乎静止，或阈值设置太高。</p>
+          <p class="pattern-desc"><strong>应对：</strong>回退到<span class="term" data-definition="等间隔采样（Uniform Sampling）：当基于内容的智能抽帧失败时，简单地按固定时间间隔截取帧。比如每 10 秒截一帧。虽然不如场景检测精准，但保证至少有图片。">等间隔采样</span>——不管场景有没有变化，每隔固定时间截一帧，保证至少能拿到一些图片。</p>
+          <p class="pattern-desc" style="color:var(--color-success);font-weight:600">&#x2713; 功能降级，质量略降但不中断</p>
+        </div>
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #2A9D8F">
+          <div class="pattern-icon" style="background:#E6F5F3;color:#2A9D8F">&#x1F399;&#xFE0F;</div>
+          <div class="pattern-title">字幕不可用</div>
+          <p class="pattern-desc"><strong>症状：</strong>视频没有上传字幕，bili CLI 返回空字幕数据。这在 B站很常见——不是每个 UP 主都会上传字幕。</p>
+          <p class="pattern-desc"><strong>应对：</strong>触发 Plan B——下载音频文件，交给 <span class="term" data-definition="mlx-whisper 是 Whisper 模型的 Apple MLX 加速版本，利用 Apple Silicon 的 GPU 进行语音识别。本地运行，速度快，无需联网。">mlx-whisper</span> 在本地做语音转文字。这一步最耗时，但保证总能拿到文字内容。</p>
+          <p class="pattern-desc" style="color:var(--color-success);font-weight:600">&#x271c; 自动切换，速度变慢但结果可靠</p>
+        </div>
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #7B6DAA">
+          <div class="pattern-icon" style="background:#F0EEF7;color:#7B6DAA">&#x1F3E0;</div>
+          <div class="pattern-title">oMLX 服务未启动</div>
+          <p class="pattern-desc"><strong>症状：</strong>调用本地 oMLX 接口时连接被拒绝（Connection refused），说明服务没运行。</p>
+          <p class="pattern-desc"><strong>应对：</strong>异常被 try/except 捕获，logger 记录错误信息，该步骤（帧分析或笔记生成）被跳过。其他不依赖 AI 的步骤正常执行。</p>
+          <p class="pattern-desc" style="color:var(--color-warning);font-weight:600">&#x26A0; 跳过该步骤，笔记质量下降</p>
+        </div>
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #D94F30">
+          <div class="pattern-icon" style="background:#FDEEE9;color:#D94F30">&#x1F511;</div>
+          <div class="pattern-title">API key 缺失</div>
+          <p class="pattern-desc"><strong>症状：</strong>使用 MiniMax 云端服务时，环境变量中没有设置对应的 API 密钥。</p>
+          <p class="pattern-desc"><strong>应对：</strong><code>os.getenv(mm["api_key_env"], "")</code> 返回空字符串。Anthropic SDK 发送请求时会被服务端拒绝并返回 401 认证错误。<span class="term" data-definition="启动时检查（Fail-fast）：在程序刚开始运行时就验证关键配置是否正确，而不是等到运行到一半才报错。这样用户能立即发现问题。">启动时检查</span>可以在程序启动时就报告配置错误。</p>
+          <p class="pattern-desc" style="color:var(--color-error);font-weight:600">&#x2717; 不可恢复，需要用户手动配置</p>
+        </div>
+
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4CB;</span>
+        <div class="callout-content">
+          <span class="callout-title">失败应对的三个等级</span>
+          <p><strong style="color:var(--color-success)">自动恢复</strong>（绿色）——程序自己搞定，用户完全不知道出过问题。如 412 重试。<br>
+          <strong style="color:var(--color-warning)">功能降级</strong>（黄色）——质量打折但能用。如 oMLX 挂了就跳过 AI 步骤。<br>
+          <strong style="color:var(--color-error)">需要人工</strong>（红色）——程序无法自行解决，需要用户介入。如 API key 缺失。</p>
+        </div>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F465;</span>
+        <div class="callout-content">
+          <span class="callout-title">团队比喻</span>
+          <p>快递员被门卫拦了？等一会儿再来（重试）。摄影师忘带镜头？用手机拍（降级）。速记员没来？先做别的事等他到（跳过）。翻译官没带证件？没法工作，需要他自己回去拿（需要人工）。每种"掉链子"都有对应的预案——这就是健壮的团队。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 4 — QUIZ
+         ============================================================ -->
+    <div class="screen animate-in" id="s4-quiz">
+      <h2 class="screen-heading">检验一下你的理解</h2>
+
+      <p>三道情景题，测试你对外部工具协作和故障应对的理解。这些都是在实际使用中会遇到的真实问题。</p>
+
+      <div class="quiz-container" id="quiz-module4">
+
+        <!-- ── Q1 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="retry" data-explanation-right="正确！_run_bili() 检测到 412 状态码后不会立刻放弃——它会自动等待递增的时间（5s、10s、15s）后重试，最多尝试 3 次。这是应对 API 限流的标准策略：慢一点，再来一次。" data-explanation-wrong="再看一下 _run_bili() 的代码。它不是直接放弃，也不是无限重试。检测到 412 后，它会线性递增等待时间（5s、10s、15s），最多重试 3 次。这是给 B站服务器'喘息'时间的策略。">
+          <p class="quiz-question">1. bili CLI 返回 412 限流，流水线怎么做？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="crash" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>直接报错退出，提示用户稍后再试</span>
+            </button>
+            <button class="quiz-option" data-value="retry" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>自动等待递增时间（5s、10s、15s）后重试，最多 3 次</span>
+            </button>
+            <button class="quiz-option" data-value="skip" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>跳过 bili，用其他方式获取数据</span>
+            </button>
+            <button class="quiz-option" data-value="infinite" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>每隔 1 秒无限重试直到成功</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q2 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="dual" data-explanation-right="没错！本地 oMLX 实现的是 OpenAI 兼容 API，所以用 OpenAI SDK 连接。云端 MiniMax 实现的是 Anthropic 兼容 API，所以用 Anthropic SDK 连接。get_llm_client() 根据配置中的 provider 字段决定走哪条路，返回对应类型的客户端和协议标识。" data-explanation-wrong="关键在于两种服务使用了不同的 API 协议：oMLX（本地）兼容 OpenAI 格式，MiniMax（云端）兼容 Anthropic 格式。这不是为了备份或负载均衡，而是因为这两个外部工具本身就使用不同的接口标准。get_llm_client() 的 if/else 就是做协议选择。">
+          <p class="quiz-question">2. 为什么需要同时支持 OpenAI 和 Anthropic 两种 API？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="backup" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>为了互为备份——一个挂了用另一个</span>
+            </button>
+            <button class="quiz-option" data-value="dual" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>本地 oMLX 用 OpenAI 格式，MiniMax 云端用 Anthropic 格式——两个外部工具协议不同</span>
+            </button>
+            <button class="quiz-option" data-value="legacy" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>历史遗留——最初只用 OpenAI，后来加了 Anthropic 但没删旧的</span>
+            </button>
+            <button class="quiz-option" data-value="speed" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>Anthropic 更快，OpenAI 更准，按场景切换</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q3 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="except" data-explanation-right="正确！extract_keyframes() 被 try/except 包裹，抛出的异常会被捕获。pipeline.py 只记录一条 warning 日志，然后继续执行后续步骤。笔记仍然会生成，只是没有关键帧部分。" data-explanation-wrong="仔细看 pipeline.py 里的代码：extract_keyframes() 外面包着 try/except。如果 ffmpeg 没装导致异常，会被 except 捕获，只记一条 warning 日志。程序不会崩溃——笔记仍然会生成，只是缺少关键帧部分。这就是优雅降级。">
+          <p class="quiz-question">3. ffmpeg 没安装会怎样？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="crash3" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序崩溃退出，显示 FileNotFoundError</span>
+            </button>
+            <button class="quiz-option" data-value="install" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序自动安装 ffmpeg 然后继续</span>
+            </button>
+            <button class="quiz-option" data-value="except" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>extract_frames 抛异常被 try/except 捕获，跳过帧抽取，继续生成笔记</span>
+            </button>
+            <button class="quiz-option" data-value="hang" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序卡住等待 ffmpeg 响应直到超时</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── QUIZ CONTROLS ────────────────────────────────────── -->
+        <div>
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module4')">检查答案</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module4')">重新作答</button>
+        </div>
+
+      </div>
+
+      <!-- ── MODULE SUMMARY CALLOUT ─────────────────────────────── -->
+      <div class="callout callout-accent" style="margin-top:var(--space-8)">
+        <span class="callout-icon">&#x1F3C1;</span>
+        <div class="callout-content">
+          <span class="callout-title">模块 4 总结：你的外部工具箱</span>
+          <p>这个模块你认识了五个外部伙伴：bili（数据获取）、ffmpeg/yt-dlp（视频处理）、oMLX/MiniMax（AI 推理）、mlx-whisper（语音转录）、Obsidian（笔记存储）。</p>
+          <p>核心原则：<strong>你不需要造每一个工具，但你必须知道哪个工具做什么、怎么调用它、它坏了怎么办。</strong>这就是"连接外部世界"的真谛——不是什么都自己做，而是做好调度和容错。</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.module-content -->
+
+</section><!-- /#module-4 --><!-- MODULE 5: 优雅地处理失败 -->
+<section class="module" id="module-5" style="min-height:100dvh;background:var(--color-bg)">
+
+  <div class="module-content">
+
+    <!-- ── MODULE HEADER ──────────────────────────────────────── -->
+    <header class="module-header animate-in">
+      <span class="module-number">05</span>
+      <h1 class="module-title">优雅地处理失败</h1>
+      <p class="module-subtitle">航班延误、行李丢失、天气绕飞——航空公司不会直接取消一切。它们给你改签（重试）、降舱（降级）、改航线（回退）。好的软件也一样。</p>
+    </header>
+
+    <!-- ============================================================
+         SCREEN 1 — 失败是常态，不是意外
+         ============================================================ -->
+    <div class="screen animate-in" id="s1-failure-normal">
+      <h2 class="screen-heading">失败是常态，不是意外</h2>
+
+      <p>现实世界的数据流水线<strong>无时无刻不在失败</strong>。网络抖动、<span class="term" data-definition="Rate limiting（速率限制）是服务器为了防止滥用，对单位时间内的请求次数设置上限。超过限制后服务器会拒绝请求，通常返回 HTTP 412 或 429 状态码。">速率限制</span>、数据缺失、第三方服务宕机……这些不是"异常情况"，这就是正常情况。</p>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x2708;&#xFE0F;</span>
+        <div class="callout-content">
+          <span class="callout-title">航班不会因为天气就停飞</span>
+          <p>想象你坐飞机旅行。航班延误了——航空公司给你改签到下一班（重试）。经济舱满了——给你升舱或降舱（降级）。目的地机场关闭——备降到附近城市（回退）。航空公司有一整套应对方案，所以即使出了问题，你最终还能到达。<strong>好的代码就是一家靠谱的航空公司。</strong></p>
+        </div>
+      </div>
+
+      <p>在 Bilibili Notes 中，我们用 5 种"应急方案"来应对各种失败场景：</p>
+
+      <!-- ── RESILIENCE PATTERN CARDS ──────────────────────────── -->
+      <div class="step-cards stagger-children">
+        <div class="step-card animate-in">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>自动重试</strong>
+            <p>网络请求失败了？等几秒再来一次。等 1 秒、2 秒、4 秒——越来越慢，给服务器喘息的时间。这就是 <span class="term" data-definition="Exponential backoff（指数退避）是一种重试策略：每次重试之间等待的时间翻倍（1秒→2秒→4秒→8秒），避免所有客户端同时重试导致服务器雪崩。">指数退避</span>。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>功能降级</strong>
+            <p>关键帧抽取失败了？没关系，跳过图片部分，笔记照样生成。字幕拿不到？用 Whisper 转录来替代。每个步骤都可以"降级"到次优方案——就像航班取消后改坐高铁。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>条件分支</strong>
+            <p>有字幕就用字幕，没有就用转录。有音频就下载，没有就跳过。程序在每一步都做判断：<code>if ... else ...</code>——根据实际情况走不同的路线。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>防御性检查</strong>
+            <p>数据里没有 <code>author</code> 字段？用 <code>.get("author", "")</code> 返回空字符串，而不是直接崩溃。永远假设数据可能缺失或格式不对——系好安全带再上路。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>详细日志</strong>
+            <p>每一步都记录"我在干什么、结果如何"。出问题时，打开日志就能看到完整的事故报告——就像飞机的<span class="term" data-definition="黑匣子是飞机上记录飞行数据和驾驶舱声音的设备。软件中的日志（logging）起类似作用：记录程序运行的每个关键步骤和状态，用于事后排查问题。">黑匣子</span>。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4A1;</span>
+        <div class="callout-content">
+          <span class="callout-title">调试直觉</span>
+          <p>理解了这 5 种模式，你就掌握了调试的核心思路：不是"为什么错了"，而是"哪里没预料到会错"。当你能预判失败、为每种失败准备方案时，你就摆脱了 AI 修 bug 的死循环。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 2 — 重试装饰器：失败后自动再来
+         ============================================================ -->
+    <div class="screen animate-in" id="s2-retry-decorator">
+      <h2 class="screen-heading">重试装饰器——失败后自动再来</h2>
+
+      <p>Bilibili Notes 里最基础也最实用的错误处理工具：一个 <span class="term" data-definition="Decorator（装饰器）是 Python 的一种语法糖。它可以在不修改函数本身代码的情况下，给函数"加上"额外功能。用 @decorator_name 写在函数定义的上方即可使用。">装饰器</span>，让任何函数获得自动重试能力。</p>
+
+      <!-- ── CODE / ENGLISH TRANSLATION BLOCK ──────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; common.py</span>
+<span class="code-keyword">def</span> <span class="code-function">retry</span>(max_retries: <span class="code-string">int</span> = <span class="code-value">3</span>, delays: <span class="code-string">tuple</span>[<span class="code-string">float</span>, ...] = (<span class="code-value">1</span>, <span class="code-value">2</span>, <span class="code-value">4</span>)):
+    <span class="code-keyword">def</span> <span class="code-function">decorator</span>(func):
+        @functools.<span class="code-function">wraps</span>(func)
+        <span class="code-keyword">def</span> <span class="code-function">wrapper</span>(*args, **kwargs):
+            last_exc = <span class="code-value">None</span>
+            <span class="code-keyword">for</span> attempt, delay <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(
+                delays[:max_retries], <span class="code-value">1</span>
+            ):
+                <span class="code-keyword">try</span>:
+                    <span class="code-keyword">return</span> <span class="code-function">func</span>(*args, **kwargs)
+                <span class="code-keyword">except</span> <span class="code-string">Exception</span> <span class="code-keyword">as</span> e:
+                    last_exc = e
+                    <span class="code-keyword">if</span> attempt &lt; max_retries:
+                        time.<span class="code-function">sleep</span>(delay)
+            <span class="code-keyword">raise</span> last_exc
+        <span class="code-keyword">return</span> wrapper
+    <span class="code-keyword">return</span> decorator</div>
+        <div class="translation-english">
+          <span class="translation-label">逐行白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>retry(max_retries=3, delays=(1,2,4))</strong> &mdash; 这个函数是一个<span class="term" data-definition="装饰器工厂是一个返回装饰器的函数。通过参数控制装饰器的行为（如重试次数、等待时间），再返回实际的装饰器。">装饰器工厂</span>——它包装其他函数，给它加上自动重试能力</div>
+            <div class="tl"><strong>max_retries</strong> &mdash; 最多尝试 max_retries 次（默认 3 次）</div>
+            <div class="tl"><strong>delays</strong> &mdash; 每次失败后等待的秒数：1 秒、2 秒、4 秒（越来越久）</div>
+            <div class="tl"><strong>try / return func(...)</strong> &mdash; 如果成功了就直接返回结果</div>
+            <div class="tl"><strong>except Exception as e</strong> &mdash; 如果失败了，捕获这个<span class="term" data-definition="Exception（异常）是程序运行时发生的错误事件。Python 用 try/except 机制捕获异常，让程序可以选择处理错误而不是直接崩溃。">异常</span>，记住它</div>
+            <div class="tl"><strong>time.sleep(delay)</strong> &mdash; 等待 delay 秒后再试</div>
+            <div class="tl"><strong>raise last_exc</strong> &mdash; 如果所有尝试都失败，抛出最后一个错误</div>
+          </div>
+        </div>
+      </div>
+
+      <p>装饰器定义好了，那它在真实场景中怎么用？看下面这段处理 B 站 <span class="term" data-definition="412 状态码是 B 站 API 的限流响应。当请求频率过高时，服务器返回 412 (Precondition Failed)，意思是'你请求太频繁了，慢点来'。">412 限流</span>的代码：</p>
+
+      <!-- ── REAL-WORLD USAGE ──────────────────────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; fetch_data.py</span>
+<span class="code-keyword">def</span> <span class="code-function">_run_bili</span>(args: <span class="code-string">list</span>[<span class="code-string">str</span>], retries: <span class="code-string">int</span> = <span class="code-value">3</span>) -> <span class="code-string">str</span>:
+    <span class="code-keyword">for</span> attempt <span class="code-keyword">in</span> <span class="code-function">range</span>(retries):
+        result = subprocess.<span class="code-function">run</span>(
+            [<span class="code-string">"bili"</span>, *args],
+            capture_output=<span class="code-value">True</span>, text=<span class="code-value">True</span>
+        )
+        combined = (result.stdout + result.stderr).<span class="code-function">lower</span>()
+        <span class="code-keyword">if</span> result.returncode == <span class="code-value">0</span> \
+           <span class="code-keyword">and</span> <span class="code-string">"412"</span> <span class="code-keyword">not in</span> combined:
+            <span class="code-keyword">return</span> result.stdout
+        <span class="code-keyword">if</span> <span class="code-string">"412"</span> <span class="code-keyword">in</span> combined:
+            wait = <span class="code-value">5</span> * (attempt + <span class="code-value">1</span>)
+            logger.<span class="code-function">warning</span>(
+                <span class="code-string">"bili 412 限流，等待 %ds 后重试"</span>, wait
+            )
+            time.<span class="code-function">sleep</span>(wait)
+            <span class="code-keyword">continue</span></div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>_run_bili(args, retries=3)</strong> &mdash; 调用 bili 命令行工具，最多重试 3 次</div>
+            <div class="tl"><strong>subprocess.run(["bili", *args])</strong> &mdash; 在子进程中运行 bili 命令</div>
+            <div class="tl"><strong>returncode == 0 and "412" not in combined</strong> &mdash; 成功且没被限流？直接返回结果</div>
+            <div class="tl"><strong>if "412" in combined</strong> &mdash; 被 B 站限流了？</div>
+            <div class="tl"><strong>wait = 5 * (attempt + 1)</strong> &mdash; 等待时间线性递增：5秒、10秒、15秒</div>
+            <div class="tl"><strong>logger.warning(...)</strong> &mdash; 把限流事件记录到<span class="term" data-definition="日志（Log）是程序运行时自动记录的状态信息。包括 DEBUG（调试）、INFO（常规信息）、WARNING（警告）、ERROR（错误）等级别。">日志</span>中</div>
+            <div class="tl"><strong>time.sleep(wait) + continue</strong> &mdash; 等一等，再试一次</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F504;</span>
+        <div class="callout-content">
+          <span class="callout-title">两种重试策略对比</span>
+          <p><code>retry</code> 装饰器是<strong>通用的</strong>——任何函数都可以用 <code>@retry()</code> 加上重试能力，等待时间指数增长（1→2→4 秒）。<code>_run_bili</code> 则是<strong>定制的</strong>——专门针对 412 限流场景，等待时间线性增长（5→10→15 秒），并且只在检测到 412 时才重试。选择哪种取决于场景：通用方案简单，定制方案精准。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 3 — 功能降级：缺什么都能继续
+         ============================================================ -->
+    <div class="screen animate-in" id="s3-graceful-degradation">
+      <h2 class="screen-heading">功能降级——缺什么都能继续</h2>
+
+      <p><span class="term" data-definition="Graceful degradation（优雅降级）是一种系统设计理念：当系统的某个组件失效时，系统不会整体崩溃，而是降低功能级别继续运行。比如网站的高级动画加载失败时，显示静态图片代替。">优雅降级</span>的核心思想：即使部分功能失效，系统仍然能提供基本服务。在 Bilibili Notes 中，每个步骤都独立容错——某一步失败了，其他步骤不受影响。</p>
+
+      <p>看看 <code>pipeline.py</code> 里的实际代码：</p>
+
+      <!-- ── PIPELINE TRY/EXCEPT CODE ──────────────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; pipeline.py</span>
+<span class="code-comment"># 关键帧抽取失败？没关系，继续</span>
+<span class="code-keyword">try</span>:
+    video_path = <span class="code-function">download_video</span>(bvid, work_dir)
+    frame_paths = <span class="code-function">extract_keyframes</span>(
+        video_path, frames_dir, config
+    )
+<span class="code-keyword">except</span> <span class="code-string">Exception</span> <span class="code-keyword">as</span> e:
+    logger.<span class="code-function">warning</span>(
+        <span class="code-string">"关键帧抽取失败 %s: %s"</span>, bvid, e
+    )
+
+<span class="code-comment"># 帧分析失败？用空描述继续</span>
+<span class="code-keyword">if</span> frames:
+    <span class="code-keyword">try</span>:
+        frames = <span class="code-function">analyze_frames</span>(frames, config)
+    <span class="code-keyword">except</span> <span class="code-string">Exception</span> <span class="code-keyword">as</span> e:
+        logger.<span class="code-function">warning</span>(
+            <span class="code-string">"帧分析失败 %s: %s"</span>, bvid, e
+        )</div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>try: download + extract</strong> &mdash; 尝试下载视频并抽取关键帧</div>
+            <div class="tl"><strong>except Exception as e</strong> &mdash; 如果失败了（ffmpeg 没装、视频格式不对……）</div>
+            <div class="tl"><strong>logger.warning(...)</strong> &mdash; 记录日志，但不崩溃——继续往下走</div>
+            <div class="tl"><strong>if frames:</strong> &mdash; 只有当帧确实抽取成功了，才去分析</div>
+            <div class="tl"><strong>try: analyze_frames</strong> &mdash; 尝试用 AI 分析帧内容</div>
+            <div class="tl"><strong>except Exception as e</strong> &mdash; 分析也失败了？记个日志，继续</div>
+          </div>
+        </div>
+      </div>
+
+      <p>每一个 <span class="term" data-definition="try/except 是 Python 的异常处理机制。try 块中放置可能出错的代码，except 块中放置出错后的应对逻辑。如果 try 块中的代码没有出错，except 块会被跳过。">try/except</span> 就像航班的应急方案：一个引擎熄火了，另一个引擎还能飞。下面的表格展示了每一步失败时的"应急着陆"方案：</p>
+
+      <!-- ── FAILURE IMPACT TABLE ──────────────────────────────── -->
+      <div style="margin:var(--space-8) 0;overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:var(--text-sm);background:var(--color-surface);border-radius:var(--radius-lg);overflow:hidden">
+          <thead>
+            <tr style="background:var(--color-accent-light);text-align:left">
+              <th style="padding:var(--space-3) var(--space-4);border-bottom:2px solid var(--color-accent);color:var(--color-accent);font-weight:600">失败的步骤</th>
+              <th style="padding:var(--space-3) var(--space-4);border-bottom:2px solid var(--color-accent);color:var(--color-accent);font-weight:600">影响</th>
+              <th style="padding:var(--space-3) var(--space-4);border-bottom:2px solid var(--color-accent);color:var(--color-accent);font-weight:600">笔记还能生成吗？</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="animate-in" style="border-bottom:1px solid var(--color-border)">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>bili CLI 限流</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">无法获取视频信息</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-success-light);color:var(--color-success);font-weight:600;font-size:var(--text-xs)">是</span>&nbsp;使用基本 BV 信息</td>
+            </tr>
+            <tr class="animate-in" style="border-bottom:1px solid var(--color-border)">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>字幕不可用</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">触发 Whisper 转录</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-success-light);color:var(--color-success);font-weight:600;font-size:var(--text-xs)">是</span>&nbsp;用转录文本替代</td>
+            </tr>
+            <tr class="animate-in" style="border-bottom:1px solid var(--color-border)">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>关键帧抽取失败</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">没有图片和帧描述</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-success-light);color:var(--color-success);font-weight:600;font-size:var(--text-xs)">是</span>&nbsp;跳过关键帧部分</td>
+            </tr>
+            <tr class="animate-in" style="border-bottom:1px solid var(--color-border)">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>帧分析失败</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">没有帧文字描述</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-success-light);color:var(--color-success);font-weight:600;font-size:var(--text-xs)">是</span>&nbsp;图片仍在，只是没描述</td>
+            </tr>
+            <tr class="animate-in">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>笔记生成失败</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">无法输出文件</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-error-light);color:var(--color-error);font-weight:600;font-size:var(--text-xs)">否</span>&nbsp;这是最后一步</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F6A8;</span>
+        <div class="callout-content">
+          <span class="callout-title">Spot the Bug 挑战</span>
+          <p>看上面的表格——注意到了吗？前 4 步失败都不会阻止笔记生成，只有第 5 步（最终生成笔记）失败才会导致没有产出。这就像一架飞机：导航失灵了可以手动飞，引擎坏了一个还能用另一个飞，但如果是<strong>全部引擎同时熄火</strong>——那就真的要迫降了。关键洞察：<strong>越靠近流水线末端的步骤，容错越难。</strong>所以最关键的容错要放在最后一步。</p>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4A1;</span>
+        <div class="callout-content">
+          <span class="callout-title">Aha!</span>
+          <p>这种"每个步骤独立容错"的模式叫做 <strong>graceful degradation</strong>（优雅降级）。它的核心思想是：即使部分功能失效，系统仍然能提供基本服务。你在给 AI 下指令时可以说：<code>"实现优雅降级，每个步骤独立 try-catch。"</code></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 4 — QUIZ
+         ============================================================ -->
+    <div class="screen animate-in" id="s4-quiz">
+      <h2 class="screen-heading">检验一下你的理解</h2>
+
+      <p>三道情景题，测试你对"优雅处理失败"的理解。这些都是你在实际使用和开发中会遇到的真实场景。</p>
+
+      <div class="quiz-container" id="quiz-module5">
+
+        <!-- ── Q1: RETRY DECORATOR ──────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="retry" data-explanation-right="正确！retry 装饰器会自动重试 3 次，等待时间分别是 1 秒、2 秒、4 秒（指数退避）。如果 3 次都失败，才会抛出异常。这就是装饰器的威力——一行 @retry() 就能给任何函数加上重试能力。" data-explanation-wrong="fetch_video_info 上有 @retry() 装饰器，它会自动重试最多 3 次，等待 1 秒、2 秒、4 秒。不会立即崩溃，也不会无限重试。指数退避的设计是为了给服务器恢复的时间。">
+          <p class="quiz-question">1. <code>fetch_video_info</code> 被调用但网络突然断了，会发生什么？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="crash" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序立即崩溃，抛出 <span class="term" data-definition="ConnectionError 是 Python requests 库在网络连接失败时抛出的异常类型。">ConnectionError</span></span>
+            </button>
+            <button class="quiz-option" data-value="retry" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>retry 装饰器自动重试 3 次（等待 1s、2s、4s），都失败才抛异常</span>
+            </button>
+            <button class="quiz-option" data-value="skip" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>跳过这一步，用空数据继续运行</span>
+            </button>
+            <button class="quiz-option" data-value="infinite" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>无限重试直到网络恢复</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q2: GRACEFUL DEGRADATION ──────────────────────────── -->
+        <div class="quiz-question-block" data-correct="degrade" data-explanation-right="没错！extract_keyframes 被 try/except 包裹，失败后只记录一条 warning 日志，然后继续执行后续步骤。笔记仍然会生成，只是关键帧部分为空。这就是优雅降级——缺了关键帧，笔记还是能用的。" data-explanation-wrong="pipeline.py 里 extract_keyframes 被 try/except 包裹，失败后只记录 warning 日志，不会崩溃也不会跳过所有后续步骤。笔记仍然会正常生成，只是没有关键帧部分。这就是优雅降级的价值。">
+          <p class="quiz-question">2. 如果 <code>extract_keyframes</code> 完全失败（比如 ffmpeg 没装），笔记会怎样？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="crash2" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序崩溃退出，不生成任何文件</span>
+            </button>
+            <button class="quiz-option" data-value="degrade" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>笔记仍然生成，只是没有关键帧部分（try/except 捕获后继续）</span>
+            </button>
+            <button class="quiz-option" data-value="empty" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>生成一个完全空白的笔记文件</span>
+            </button>
+            <button class="quiz-option" data-value="skip2" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>跳过这个视频，处理下一个</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q3: DEFENSIVE CHECK ───────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="get" data-explanation-right="正确！代码使用的是 .get('author', '') 而不是 ['author']。.get() 方法在键不存在时返回默认值（空字符串），不会抛出 KeyError。笔记中作者名会显示为空，但程序不会崩溃——这就是防御性编程。" data-explanation-wrong="代码使用的是 dict.get('author', '') 而不是 dict['author']。.get() 是 Python 字典的防御性访问方法：键存在时返回值，不存在时返回默认值（空字符串）。程序不会崩溃，但笔记中作者名可能为空。">
+          <p class="quiz-question">3. bili CLI 返回数据但格式和代码预期不一致（比如 <code>author</code> 字段变成了 <code>creator</code>），会发生什么？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="keyerror" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>抛出 <span class="term" data-definition="KeyError 是 Python 在用方括号访问字典中不存在的键时抛出的异常。">KeyError</span>，程序崩溃</span>
+            </button>
+            <button class="quiz-option" data-value="get" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>.get() 方法返回空字符串，不崩溃，但笔记中作者名可能为空</span>
+            </button>
+            <button class="quiz-option" data-value="retry3" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>retry 装饰器自动重试，期望下次返回正确格式</span>
+            </button>
+            <button class="quiz-option" data-value="convert" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>自动把 creator 字段重命名为 author</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── QUIZ CONTROLS ────────────────────────────────────── -->
+        <div>
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module5')">检查答案</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module5')">重新作答</button>
+        </div>
+
+      </div>
+
+      <!-- ── MODULE SUMMARY CALLOUT ─────────────────────────────── -->
+      <div class="callout callout-accent" style="margin-top:var(--space-8)">
+        <span class="callout-icon">&#x1F3C1;</span>
+        <div class="callout-content">
+          <span class="callout-title">Module 5 总结：你的调试工具箱</span>
+          <p>恭喜你完成了全部 5 个模块！现在你拥有了完整的调试直觉：</p>
+          <p><strong>自动重试</strong>应对临时故障，<strong>优雅降级</strong>保证核心功能可用，<strong>条件分支</strong>处理不同场景，<strong>防御性检查</strong>防止数据异常，<strong>详细日志</strong>帮你快速定位问题。</p>
+          <p>下次遇到 bug 时，不要慌——问自己：这一步有没有重试？有没有降级方案？有没有防御性检查？日志说了什么？答案通常就在这四个问题里。</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.module-content -->
+
+</section><!-- /#module-5 -->  </main>
+
+</body>
+</html>

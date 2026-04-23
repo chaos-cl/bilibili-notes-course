@@ -1,0 +1,377 @@
+<!-- MODULE 5: 优雅地处理失败 -->
+<section class="module" id="module-5" style="min-height:100dvh;background:var(--color-bg)">
+
+  <div class="module-content">
+
+    <!-- ── MODULE HEADER ──────────────────────────────────────── -->
+    <header class="module-header animate-in">
+      <span class="module-number">05</span>
+      <h1 class="module-title">优雅地处理失败</h1>
+      <p class="module-subtitle">航班延误、行李丢失、天气绕飞——航空公司不会直接取消一切。它们给你改签（重试）、降舱（降级）、改航线（回退）。好的软件也一样。</p>
+    </header>
+
+    <!-- ============================================================
+         SCREEN 1 — 失败是常态，不是意外
+         ============================================================ -->
+    <div class="screen animate-in" id="s1-failure-normal">
+      <h2 class="screen-heading">失败是常态，不是意外</h2>
+
+      <p>现实世界的数据流水线<strong>无时无刻不在失败</strong>。网络抖动、<span class="term" data-definition="Rate limiting（速率限制）是服务器为了防止滥用，对单位时间内的请求次数设置上限。超过限制后服务器会拒绝请求，通常返回 HTTP 412 或 429 状态码。">速率限制</span>、数据缺失、第三方服务宕机……这些不是"异常情况"，这就是正常情况。</p>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x2708;&#xFE0F;</span>
+        <div class="callout-content">
+          <span class="callout-title">航班不会因为天气就停飞</span>
+          <p>想象你坐飞机旅行。航班延误了——航空公司给你改签到下一班（重试）。经济舱满了——给你升舱或降舱（降级）。目的地机场关闭——备降到附近城市（回退）。航空公司有一整套应对方案，所以即使出了问题，你最终还能到达。<strong>好的代码就是一家靠谱的航空公司。</strong></p>
+        </div>
+      </div>
+
+      <p>在 Bilibili Notes 中，我们用 5 种"应急方案"来应对各种失败场景：</p>
+
+      <!-- ── RESILIENCE PATTERN CARDS ──────────────────────────── -->
+      <div class="step-cards stagger-children">
+        <div class="step-card animate-in">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>自动重试</strong>
+            <p>网络请求失败了？等几秒再来一次。等 1 秒、2 秒、4 秒——越来越慢，给服务器喘息的时间。这就是 <span class="term" data-definition="Exponential backoff（指数退避）是一种重试策略：每次重试之间等待的时间翻倍（1秒→2秒→4秒→8秒），避免所有客户端同时重试导致服务器雪崩。">指数退避</span>。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>功能降级</strong>
+            <p>关键帧抽取失败了？没关系，跳过图片部分，笔记照样生成。字幕拿不到？用 Whisper 转录来替代。每个步骤都可以"降级"到次优方案——就像航班取消后改坐高铁。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>条件分支</strong>
+            <p>有字幕就用字幕，没有就用转录。有音频就下载，没有就跳过。程序在每一步都做判断：<code>if ... else ...</code>——根据实际情况走不同的路线。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>防御性检查</strong>
+            <p>数据里没有 <code>author</code> 字段？用 <code>.get("author", "")</code> 返回空字符串，而不是直接崩溃。永远假设数据可能缺失或格式不对——系好安全带再上路。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>详细日志</strong>
+            <p>每一步都记录"我在干什么、结果如何"。出问题时，打开日志就能看到完整的事故报告——就像飞机的<span class="term" data-definition="黑匣子是飞机上记录飞行数据和驾驶舱声音的设备。软件中的日志（logging）起类似作用：记录程序运行的每个关键步骤和状态，用于事后排查问题。">黑匣子</span>。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4A1;</span>
+        <div class="callout-content">
+          <span class="callout-title">调试直觉</span>
+          <p>理解了这 5 种模式，你就掌握了调试的核心思路：不是"为什么错了"，而是"哪里没预料到会错"。当你能预判失败、为每种失败准备方案时，你就摆脱了 AI 修 bug 的死循环。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 2 — 重试装饰器：失败后自动再来
+         ============================================================ -->
+    <div class="screen animate-in" id="s2-retry-decorator">
+      <h2 class="screen-heading">重试装饰器——失败后自动再来</h2>
+
+      <p>Bilibili Notes 里最基础也最实用的错误处理工具：一个 <span class="term" data-definition="Decorator（装饰器）是 Python 的一种语法糖。它可以在不修改函数本身代码的情况下，给函数"加上"额外功能。用 @decorator_name 写在函数定义的上方即可使用。">装饰器</span>，让任何函数获得自动重试能力。</p>
+
+      <!-- ── CODE / ENGLISH TRANSLATION BLOCK ──────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; common.py</span>
+<span class="code-keyword">def</span> <span class="code-function">retry</span>(max_retries: <span class="code-string">int</span> = <span class="code-value">3</span>, delays: <span class="code-string">tuple</span>[<span class="code-string">float</span>, ...] = (<span class="code-value">1</span>, <span class="code-value">2</span>, <span class="code-value">4</span>)):
+    <span class="code-keyword">def</span> <span class="code-function">decorator</span>(func):
+        @functools.<span class="code-function">wraps</span>(func)
+        <span class="code-keyword">def</span> <span class="code-function">wrapper</span>(*args, **kwargs):
+            last_exc = <span class="code-value">None</span>
+            <span class="code-keyword">for</span> attempt, delay <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(
+                delays[:max_retries], <span class="code-value">1</span>
+            ):
+                <span class="code-keyword">try</span>:
+                    <span class="code-keyword">return</span> <span class="code-function">func</span>(*args, **kwargs)
+                <span class="code-keyword">except</span> <span class="code-string">Exception</span> <span class="code-keyword">as</span> e:
+                    last_exc = e
+                    <span class="code-keyword">if</span> attempt &lt; max_retries:
+                        time.<span class="code-function">sleep</span>(delay)
+            <span class="code-keyword">raise</span> last_exc
+        <span class="code-keyword">return</span> wrapper
+    <span class="code-keyword">return</span> decorator</div>
+        <div class="translation-english">
+          <span class="translation-label">逐行白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>retry(max_retries=3, delays=(1,2,4))</strong> &mdash; 这个函数是一个<span class="term" data-definition="装饰器工厂是一个返回装饰器的函数。通过参数控制装饰器的行为（如重试次数、等待时间），再返回实际的装饰器。">装饰器工厂</span>——它包装其他函数，给它加上自动重试能力</div>
+            <div class="tl"><strong>max_retries</strong> &mdash; 最多尝试 max_retries 次（默认 3 次）</div>
+            <div class="tl"><strong>delays</strong> &mdash; 每次失败后等待的秒数：1 秒、2 秒、4 秒（越来越久）</div>
+            <div class="tl"><strong>try / return func(...)</strong> &mdash; 如果成功了就直接返回结果</div>
+            <div class="tl"><strong>except Exception as e</strong> &mdash; 如果失败了，捕获这个<span class="term" data-definition="Exception（异常）是程序运行时发生的错误事件。Python 用 try/except 机制捕获异常，让程序可以选择处理错误而不是直接崩溃。">异常</span>，记住它</div>
+            <div class="tl"><strong>time.sleep(delay)</strong> &mdash; 等待 delay 秒后再试</div>
+            <div class="tl"><strong>raise last_exc</strong> &mdash; 如果所有尝试都失败，抛出最后一个错误</div>
+          </div>
+        </div>
+      </div>
+
+      <p>装饰器定义好了，那它在真实场景中怎么用？看下面这段处理 B 站 <span class="term" data-definition="412 状态码是 B 站 API 的限流响应。当请求频率过高时，服务器返回 412 (Precondition Failed)，意思是'你请求太频繁了，慢点来'。">412 限流</span>的代码：</p>
+
+      <!-- ── REAL-WORLD USAGE ──────────────────────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; fetch_data.py</span>
+<span class="code-keyword">def</span> <span class="code-function">_run_bili</span>(args: <span class="code-string">list</span>[<span class="code-string">str</span>], retries: <span class="code-string">int</span> = <span class="code-value">3</span>) -> <span class="code-string">str</span>:
+    <span class="code-keyword">for</span> attempt <span class="code-keyword">in</span> <span class="code-function">range</span>(retries):
+        result = subprocess.<span class="code-function">run</span>(
+            [<span class="code-string">"bili"</span>, *args],
+            capture_output=<span class="code-value">True</span>, text=<span class="code-value">True</span>
+        )
+        combined = (result.stdout + result.stderr).<span class="code-function">lower</span>()
+        <span class="code-keyword">if</span> result.returncode == <span class="code-value">0</span> \
+           <span class="code-keyword">and</span> <span class="code-string">"412"</span> <span class="code-keyword">not in</span> combined:
+            <span class="code-keyword">return</span> result.stdout
+        <span class="code-keyword">if</span> <span class="code-string">"412"</span> <span class="code-keyword">in</span> combined:
+            wait = <span class="code-value">5</span> * (attempt + <span class="code-value">1</span>)
+            logger.<span class="code-function">warning</span>(
+                <span class="code-string">"bili 412 限流，等待 %ds 后重试"</span>, wait
+            )
+            time.<span class="code-function">sleep</span>(wait)
+            <span class="code-keyword">continue</span></div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>_run_bili(args, retries=3)</strong> &mdash; 调用 bili 命令行工具，最多重试 3 次</div>
+            <div class="tl"><strong>subprocess.run(["bili", *args])</strong> &mdash; 在子进程中运行 bili 命令</div>
+            <div class="tl"><strong>returncode == 0 and "412" not in combined</strong> &mdash; 成功且没被限流？直接返回结果</div>
+            <div class="tl"><strong>if "412" in combined</strong> &mdash; 被 B 站限流了？</div>
+            <div class="tl"><strong>wait = 5 * (attempt + 1)</strong> &mdash; 等待时间线性递增：5秒、10秒、15秒</div>
+            <div class="tl"><strong>logger.warning(...)</strong> &mdash; 把限流事件记录到<span class="term" data-definition="日志（Log）是程序运行时自动记录的状态信息。包括 DEBUG（调试）、INFO（常规信息）、WARNING（警告）、ERROR（错误）等级别。">日志</span>中</div>
+            <div class="tl"><strong>time.sleep(wait) + continue</strong> &mdash; 等一等，再试一次</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F504;</span>
+        <div class="callout-content">
+          <span class="callout-title">两种重试策略对比</span>
+          <p><code>retry</code> 装饰器是<strong>通用的</strong>——任何函数都可以用 <code>@retry()</code> 加上重试能力，等待时间指数增长（1→2→4 秒）。<code>_run_bili</code> 则是<strong>定制的</strong>——专门针对 412 限流场景，等待时间线性增长（5→10→15 秒），并且只在检测到 412 时才重试。选择哪种取决于场景：通用方案简单，定制方案精准。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 3 — 功能降级：缺什么都能继续
+         ============================================================ -->
+    <div class="screen animate-in" id="s3-graceful-degradation">
+      <h2 class="screen-heading">功能降级——缺什么都能继续</h2>
+
+      <p><span class="term" data-definition="Graceful degradation（优雅降级）是一种系统设计理念：当系统的某个组件失效时，系统不会整体崩溃，而是降低功能级别继续运行。比如网站的高级动画加载失败时，显示静态图片代替。">优雅降级</span>的核心思想：即使部分功能失效，系统仍然能提供基本服务。在 Bilibili Notes 中，每个步骤都独立容错——某一步失败了，其他步骤不受影响。</p>
+
+      <p>看看 <code>pipeline.py</code> 里的实际代码：</p>
+
+      <!-- ── PIPELINE TRY/EXCEPT CODE ──────────────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; pipeline.py</span>
+<span class="code-comment"># 关键帧抽取失败？没关系，继续</span>
+<span class="code-keyword">try</span>:
+    video_path = <span class="code-function">download_video</span>(bvid, work_dir)
+    frame_paths = <span class="code-function">extract_keyframes</span>(
+        video_path, frames_dir, config
+    )
+<span class="code-keyword">except</span> <span class="code-string">Exception</span> <span class="code-keyword">as</span> e:
+    logger.<span class="code-function">warning</span>(
+        <span class="code-string">"关键帧抽取失败 %s: %s"</span>, bvid, e
+    )
+
+<span class="code-comment"># 帧分析失败？用空描述继续</span>
+<span class="code-keyword">if</span> frames:
+    <span class="code-keyword">try</span>:
+        frames = <span class="code-function">analyze_frames</span>(frames, config)
+    <span class="code-keyword">except</span> <span class="code-string">Exception</span> <span class="code-keyword">as</span> e:
+        logger.<span class="code-function">warning</span>(
+            <span class="code-string">"帧分析失败 %s: %s"</span>, bvid, e
+        )</div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>try: download + extract</strong> &mdash; 尝试下载视频并抽取关键帧</div>
+            <div class="tl"><strong>except Exception as e</strong> &mdash; 如果失败了（ffmpeg 没装、视频格式不对……）</div>
+            <div class="tl"><strong>logger.warning(...)</strong> &mdash; 记录日志，但不崩溃——继续往下走</div>
+            <div class="tl"><strong>if frames:</strong> &mdash; 只有当帧确实抽取成功了，才去分析</div>
+            <div class="tl"><strong>try: analyze_frames</strong> &mdash; 尝试用 AI 分析帧内容</div>
+            <div class="tl"><strong>except Exception as e</strong> &mdash; 分析也失败了？记个日志，继续</div>
+          </div>
+        </div>
+      </div>
+
+      <p>每一个 <span class="term" data-definition="try/except 是 Python 的异常处理机制。try 块中放置可能出错的代码，except 块中放置出错后的应对逻辑。如果 try 块中的代码没有出错，except 块会被跳过。">try/except</span> 就像航班的应急方案：一个引擎熄火了，另一个引擎还能飞。下面的表格展示了每一步失败时的"应急着陆"方案：</p>
+
+      <!-- ── FAILURE IMPACT TABLE ──────────────────────────────── -->
+      <div style="margin:var(--space-8) 0;overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:var(--text-sm);background:var(--color-surface);border-radius:var(--radius-lg);overflow:hidden">
+          <thead>
+            <tr style="background:var(--color-accent-light);text-align:left">
+              <th style="padding:var(--space-3) var(--space-4);border-bottom:2px solid var(--color-accent);color:var(--color-accent);font-weight:600">失败的步骤</th>
+              <th style="padding:var(--space-3) var(--space-4);border-bottom:2px solid var(--color-accent);color:var(--color-accent);font-weight:600">影响</th>
+              <th style="padding:var(--space-3) var(--space-4);border-bottom:2px solid var(--color-accent);color:var(--color-accent);font-weight:600">笔记还能生成吗？</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="animate-in" style="border-bottom:1px solid var(--color-border)">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>bili CLI 限流</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">无法获取视频信息</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-success-light);color:var(--color-success);font-weight:600;font-size:var(--text-xs)">是</span>&nbsp;使用基本 BV 信息</td>
+            </tr>
+            <tr class="animate-in" style="border-bottom:1px solid var(--color-border)">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>字幕不可用</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">触发 Whisper 转录</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-success-light);color:var(--color-success);font-weight:600;font-size:var(--text-xs)">是</span>&nbsp;用转录文本替代</td>
+            </tr>
+            <tr class="animate-in" style="border-bottom:1px solid var(--color-border)">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>关键帧抽取失败</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">没有图片和帧描述</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-success-light);color:var(--color-success);font-weight:600;font-size:var(--text-xs)">是</span>&nbsp;跳过关键帧部分</td>
+            </tr>
+            <tr class="animate-in" style="border-bottom:1px solid var(--color-border)">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>帧分析失败</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">没有帧文字描述</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-success-light);color:var(--color-success);font-weight:600;font-size:var(--text-xs)">是</span>&nbsp;图片仍在，只是没描述</td>
+            </tr>
+            <tr class="animate-in">
+              <td style="padding:var(--space-3) var(--space-4)"><strong>笔记生成失败</strong></td>
+              <td style="padding:var(--space-3) var(--space-4)">无法输出文件</td>
+              <td style="padding:var(--space-3) var(--space-4)"><span style="display:inline-block;padding:2px 10px;border-radius:9999px;background:var(--color-error-light);color:var(--color-error);font-weight:600;font-size:var(--text-xs)">否</span>&nbsp;这是最后一步</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F6A8;</span>
+        <div class="callout-content">
+          <span class="callout-title">Spot the Bug 挑战</span>
+          <p>看上面的表格——注意到了吗？前 4 步失败都不会阻止笔记生成，只有第 5 步（最终生成笔记）失败才会导致没有产出。这就像一架飞机：导航失灵了可以手动飞，引擎坏了一个还能用另一个飞，但如果是<strong>全部引擎同时熄火</strong>——那就真的要迫降了。关键洞察：<strong>越靠近流水线末端的步骤，容错越难。</strong>所以最关键的容错要放在最后一步。</p>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4A1;</span>
+        <div class="callout-content">
+          <span class="callout-title">Aha!</span>
+          <p>这种"每个步骤独立容错"的模式叫做 <strong>graceful degradation</strong>（优雅降级）。它的核心思想是：即使部分功能失效，系统仍然能提供基本服务。你在给 AI 下指令时可以说：<code>"实现优雅降级，每个步骤独立 try-catch。"</code></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 4 — QUIZ
+         ============================================================ -->
+    <div class="screen animate-in" id="s4-quiz">
+      <h2 class="screen-heading">检验一下你的理解</h2>
+
+      <p>三道情景题，测试你对"优雅处理失败"的理解。这些都是你在实际使用和开发中会遇到的真实场景。</p>
+
+      <div class="quiz-container" id="quiz-module5">
+
+        <!-- ── Q1: RETRY DECORATOR ──────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="retry" data-explanation-right="正确！retry 装饰器会自动重试 3 次，等待时间分别是 1 秒、2 秒、4 秒（指数退避）。如果 3 次都失败，才会抛出异常。这就是装饰器的威力——一行 @retry() 就能给任何函数加上重试能力。" data-explanation-wrong="fetch_video_info 上有 @retry() 装饰器，它会自动重试最多 3 次，等待 1 秒、2 秒、4 秒。不会立即崩溃，也不会无限重试。指数退避的设计是为了给服务器恢复的时间。">
+          <p class="quiz-question">1. <code>fetch_video_info</code> 被调用但网络突然断了，会发生什么？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="crash" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序立即崩溃，抛出 <span class="term" data-definition="ConnectionError 是 Python requests 库在网络连接失败时抛出的异常类型。">ConnectionError</span></span>
+            </button>
+            <button class="quiz-option" data-value="retry" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>retry 装饰器自动重试 3 次（等待 1s、2s、4s），都失败才抛异常</span>
+            </button>
+            <button class="quiz-option" data-value="skip" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>跳过这一步，用空数据继续运行</span>
+            </button>
+            <button class="quiz-option" data-value="infinite" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>无限重试直到网络恢复</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q2: GRACEFUL DEGRADATION ──────────────────────────── -->
+        <div class="quiz-question-block" data-correct="degrade" data-explanation-right="没错！extract_keyframes 被 try/except 包裹，失败后只记录一条 warning 日志，然后继续执行后续步骤。笔记仍然会生成，只是关键帧部分为空。这就是优雅降级——缺了关键帧，笔记还是能用的。" data-explanation-wrong="pipeline.py 里 extract_keyframes 被 try/except 包裹，失败后只记录 warning 日志，不会崩溃也不会跳过所有后续步骤。笔记仍然会正常生成，只是没有关键帧部分。这就是优雅降级的价值。">
+          <p class="quiz-question">2. 如果 <code>extract_keyframes</code> 完全失败（比如 ffmpeg 没装），笔记会怎样？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="crash2" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序崩溃退出，不生成任何文件</span>
+            </button>
+            <button class="quiz-option" data-value="degrade" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>笔记仍然生成，只是没有关键帧部分（try/except 捕获后继续）</span>
+            </button>
+            <button class="quiz-option" data-value="empty" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>生成一个完全空白的笔记文件</span>
+            </button>
+            <button class="quiz-option" data-value="skip2" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>跳过这个视频，处理下一个</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q3: DEFENSIVE CHECK ───────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="get" data-explanation-right="正确！代码使用的是 .get('author', '') 而不是 ['author']。.get() 方法在键不存在时返回默认值（空字符串），不会抛出 KeyError。笔记中作者名会显示为空，但程序不会崩溃——这就是防御性编程。" data-explanation-wrong="代码使用的是 dict.get('author', '') 而不是 dict['author']。.get() 是 Python 字典的防御性访问方法：键存在时返回值，不存在时返回默认值（空字符串）。程序不会崩溃，但笔记中作者名可能为空。">
+          <p class="quiz-question">3. bili CLI 返回数据但格式和代码预期不一致（比如 <code>author</code> 字段变成了 <code>creator</code>），会发生什么？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="keyerror" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>抛出 <span class="term" data-definition="KeyError 是 Python 在用方括号访问字典中不存在的键时抛出的异常。">KeyError</span>，程序崩溃</span>
+            </button>
+            <button class="quiz-option" data-value="get" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>.get() 方法返回空字符串，不崩溃，但笔记中作者名可能为空</span>
+            </button>
+            <button class="quiz-option" data-value="retry3" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>retry 装饰器自动重试，期望下次返回正确格式</span>
+            </button>
+            <button class="quiz-option" data-value="convert" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>自动把 creator 字段重命名为 author</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── QUIZ CONTROLS ────────────────────────────────────── -->
+        <div>
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module5')">检查答案</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module5')">重新作答</button>
+        </div>
+
+      </div>
+
+      <!-- ── MODULE SUMMARY CALLOUT ─────────────────────────────── -->
+      <div class="callout callout-accent" style="margin-top:var(--space-8)">
+        <span class="callout-icon">&#x1F3C1;</span>
+        <div class="callout-content">
+          <span class="callout-title">Module 5 总结：你的调试工具箱</span>
+          <p>恭喜你完成了全部 5 个模块！现在你拥有了完整的调试直觉：</p>
+          <p><strong>自动重试</strong>应对临时故障，<strong>优雅降级</strong>保证核心功能可用，<strong>条件分支</strong>处理不同场景，<strong>防御性检查</strong>防止数据异常，<strong>详细日志</strong>帮你快速定位问题。</p>
+          <p>下次遇到 bug 时，不要慌——问自己：这一步有没有重试？有没有降级方案？有没有防御性检查？日志说了什么？答案通常就在这四个问题里。</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.module-content -->
+
+</section><!-- /#module-5 -->

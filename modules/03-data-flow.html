@@ -1,0 +1,299 @@
+<section class="module" id="module-3" style="background: var(--color-bg)">
+  <div class="module-content">
+
+    <header class="module-header animate-in">
+      <span class="module-number">03</span>
+      <h1 class="module-title">数据如何流转</h1>
+      <p class="module-subtitle">追踪一条视频数据从输入到最终笔记的完整旅程，理解每个环节传递了什么。</p>
+    </header>
+
+    <!-- ========== Screen 1: 一条视频数据的完整旅程 ========== -->
+    <section class="screen animate-in">
+      <h2 class="screen-heading">一条视频数据的完整旅程</h2>
+      <p>把整个<span class="term" data-definition="Pipeline：将数据从输入逐步处理到输出的自动化流程，像工厂流水线一样">管线</span>想象成一场<span class="term" data-definition="接力赛：每个选手接棒后完成自己的赛段，再把棒交给下一位——函数就是选手，数据就是接力棒">接力赛</span>。数据是接力棒，每个函数是一位选手。</p>
+
+      <div class="step-cards animate-in stagger-children">
+        <div class="step-card animate-in">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>用户输入 BV号</strong>
+            <p><span class="term" data-definition="resolve_input() 负责把用户输入的 URL、BV号或UP主名统一解析成标准的 BV 号列表">resolve_input()</span> 解析输入，提取出 BV 标识符</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>汇聚原始素材</strong>
+            <p><span class="term" data-definition="fetch_all() 一次性获取：视频元信息、字幕文本、评论列表、音频文件路径">fetch_all()</span> 收集视频信息、字幕文本、评论列表、音频路径</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>没有字幕？听写出来</strong>
+            <p>若视频无字幕，<span class="term" data-definition="transcribe() 使用 Whisper 模型把音频文件转成文字，是整个管线中最耗时的步骤">transcribe()</span> 将音频转为文字</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>抽取关键帧图片</strong>
+            <p><span class="term" data-definition="extract_keyframes() 根据画面场景变化程度，用 ffmpeg 从视频中截取关键画面保存为 PNG 图片">extract_keyframes()</span> 分析画面变化，截取关键帧</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>理解每一帧画面</strong>
+            <p><span class="term" data-definition="analyze_frames() 调用视觉语言模型 VLM，为每一帧图片生成一句中文描述">analyze_frames()</span> 用视觉模型给每帧生成文字描述</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <strong>合成最终笔记</strong>
+            <p><span class="term" data-definition="generate_note() 把字幕、评论、帧描述等所有素材交给大语言模型 LLM，生成结构化 Markdown 笔记">generate_note()</span> 将所有素材交给 LLM 生成 Markdown</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">7</div>
+          <div class="step-body">
+            <strong>存入 Obsidian 仓库</strong>
+            <p>笔记文件保存到 <span class="term" data-definition="Obsidian vault：本地 Markdown 知识库目录，所有笔记以 .md 文件形式存储">Obsidian vault</span>，流程结束</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent animate-in">
+        <div class="callout-icon">💡</div>
+        <div class="callout-content">
+          <strong class="callout-title">接力赛比喻</strong>
+          <p>每个函数是一位选手。选手 1 把棒交给选手 2，选手 2 跑完自己的赛段再交给下一位。<span class="term" data-definition="配置文件就像教练的战术板，告诉每个选手该怎么跑——用什么模型、保存到哪个目录、截多少帧">配置文件</span>则是教练的战术板。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Screen 2: 配置文件是控制中心 ========== -->
+    <section class="screen animate-in">
+      <h2 class="screen-heading">配置文件是控制中心</h2>
+      <p><code>config.yaml</code> 告诉每位选手该怎么跑，<code>get_llm_client()</code> 负责根据战术派出对应选手。</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">YAML</span>
+          <pre><code>
+<span class="code-line"><span class="code-keyword">omlx:</span></span>
+<span class="code-line">  <span class="code-property">base_url:</span> <span class="code-string">"http://localhost:8000/v1"</span></span>
+<span class="code-line">  <span class="code-property">llm_model:</span> <span class="code-string">"Qwen3.6-35B-A3B-nvfp4"</span></span>
+<span class="code-line">  <span class="code-property">vlm_model:</span> <span class="code-string">"Qwen3-VL-8B-Instruct-MLX-4bit"</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-keyword">obsidian:</span></span>
+<span class="code-line">  <span class="code-property">vault_path:</span> <span class="code-string">"~/Documents/Bilibili/Bilibili"</span></span>
+<span class="code-line">  <span class="code-property">notes_dir:</span> <span class="code-string">"video-notes"</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-keyword">frames:</span></span>
+<span class="code-line">  <span class="code-property">scene_threshold:</span> <span class="code-number">0.3</span></span>
+<span class="code-line">  <span class="code-property">max_frames:</span> <span class="code-number">20</span></span>
+          </code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <p class="tl">本地 AI 服务的地址和两个模型名称：</p>
+            <p class="tl">llm_model = 负责写笔记的文本选手</p>
+            <p class="tl">vlm_model = 负责看图的视觉选手</p>
+            <p class="tl">&nbsp;</p>
+            <p class="tl">笔记保存到哪里——vault_path 是根目录</p>
+            <p class="tl">notes_dir 是笔记子文件夹</p>
+            <p class="tl">&nbsp;</p>
+            <p class="tl">抽帧策略：scene_threshold 越小越敏感</p>
+            <p class="tl">max_frames = 最多截 20 张关键帧图片</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">PYTHON</span>
+          <pre><code>
+<span class="code-line"><span class="code-keyword">def</span> <span class="code-function">get_llm_client</span>(config, provider=None):</span>
+<span class="code-line">    provider = provider <span class="code-keyword">or</span> config.get(<span class="code-string">"provider"</span>)</span>
+<span class="code-line">    <span class="code-keyword">if</span> provider == <span class="code-string">"minimax"</span>:</span>
+<span class="code-line">        client = <span class="code-function">Anthropic</span>(base_url=..., api_key=...)</span>
+<span class="code-line">        <span class="code-keyword">return</span> client, model, <span class="code-string">"anthropic"</span></span>
+<span class="code-line">    <span class="code-keyword">else</span>:</span>
+<span class="code-line">        client = <span class="code-function">OpenAI</span>(base_url=config[<span class="code-string">"omlx"</span>][<span class="code-string">"base_url"</span>])</span>
+<span class="code-line">        <span class="code-keyword">return</span> client, model, <span class="code-string">"openai"</span></span>
+          </code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <p class="tl">检查用哪个 AI 服务——默认读配置文件</p>
+            <p class="tl">如果选了 MiniMax 云端服务：</p>
+            <p class="tl">用 Anthropic 格式的 API 连接远程服务器</p>
+            <p class="tl">返回客户端、模型名、API 类型</p>
+            <p class="tl">否则用本地 oMLX 服务：</p>
+            <p class="tl">用 OpenAI 格式的 API 连接本地服务</p>
+            <p class="tl">返回客户端、模型名、API 类型</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info animate-in">
+        <div class="callout-icon">🔑</div>
+        <div class="callout-content">
+          <strong class="callout-title">分层解耦</strong>
+          <p>配置文件和代码是分层解耦的。改模型只需改 YAML，不用动代码；换服务商只需改 <code>provider</code> 字符串，<code>get_llm_client()</code> 自动适配。给 AI 下指令时可以说：<em>"实现分层配置，运行时根据 provider 字符串切换 API 客户端。"</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Screen 3: 数据在函数之间传递 ========== -->
+    <section class="screen animate-in">
+      <h2 class="screen-heading">数据在函数之间传递</h2>
+      <p>点击 <strong>Next Step</strong>，观看接力棒如何从一位选手传到下一位。</p>
+
+      <div class="flow-animation animate-in" data-steps="[{&quot;highlight&quot;:&quot;flow-actor-1&quot;,&quot;label&quot;:&quot;resolve_input() 解析用户输入，提取 BV号&quot;},{&quot;highlight&quot;:&quot;flow-actor-1&quot;,&quot;label&quot;:&quot;传递 BV号给数据采集&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-1&quot;,&quot;to&quot;:&quot;actor-2&quot;},{&quot;highlight&quot;:&quot;flow-actor-2&quot;,&quot;label&quot;:&quot;fetch_all() 并行获取视频信息、字幕、评论、音频&quot;},{&quot;highlight&quot;:&quot;flow-actor-2&quot;,&quot;label&quot;:&quot;无字幕？把音频发给转录&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-2&quot;,&quot;to&quot;:&quot;actor-3&quot;},{&quot;highlight&quot;:&quot;flow-actor-3&quot;,&quot;label&quot;:&quot;transcribe() 将音频转为文字&quot;},{&quot;highlight&quot;:&quot;flow-actor-3&quot;,&quot;label&quot;:&quot;ffmpeg 场景检测抽取关键帧&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-3&quot;,&quot;to&quot;:&quot;actor-4&quot;},{&quot;highlight&quot;:&quot;flow-actor-4&quot;,&quot;label&quot;:&quot;extract_keyframes() 截取关键帧图片&quot;},{&quot;highlight&quot;:&quot;flow-actor-4&quot;,&quot;label&quot;:&quot;帧图片发给视觉模型分析&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-4&quot;,&quot;to&quot;:&quot;actor-5&quot;},{&quot;highlight&quot;:&quot;flow-actor-5&quot;,&quot;label&quot;:&quot;analyze_frames() 视觉模型描述每帧内容&quot;},{&quot;highlight&quot;:&quot;flow-actor-5&quot;,&quot;label&quot;:&quot;所有素材汇总给笔记生成&quot;,&quot;packet&quot;:true,&quot;from&quot;:&quot;actor-5&quot;,&quot;to&quot;:&quot;actor-6&quot;},{&quot;highlight&quot;:&quot;flow-actor-6&quot;,&quot;label&quot;:&quot;generate_note() LLM 生成 Markdown，保存到 Obsidian&quot;}]">
+        <div class="flow-actors">
+          <div class="flow-actor" id="flow-actor-1">
+            <div class="flow-actor-icon">🔍</div>
+            <span>resolve_input</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-2">
+            <div class="flow-actor-icon">📦</div>
+            <span>fetch_all</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-3">
+            <div class="flow-actor-icon">🎙️</div>
+            <span>transcribe</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-4">
+            <div class="flow-actor-icon">🎬</div>
+            <span>extract_keyframes</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-5">
+            <div class="flow-actor-icon">👁️</div>
+            <span>analyze_frames</span>
+          </div>
+          <div class="flow-actor" id="flow-actor-6">
+            <div class="flow-actor-icon">📝</div>
+            <span>generate_note</span>
+          </div>
+        </div>
+
+        <div class="flow-packet" id="flow-packet"></div>
+
+        <div class="flow-step-label" id="flow-label">Click &quot;Next Step&quot; to begin</div>
+
+        <div class="flow-controls">
+          <button class="btn flow-next-btn">Next Step</button>
+          <button class="btn flow-reset-btn">Restart</button>
+          <span class="flow-progress"></span>
+        </div>
+      </div>
+
+      <div class="pattern-cards animate-in">
+        <div class="pattern-card" style="border-top: 3px solid var(--color-actor-2)">
+          <div class="pattern-icon" style="background: var(--color-actor-2)">📦</div>
+          <h4 class="pattern-title">字典 (dict)</h4>
+          <p class="pattern-desc">fetch_all 返回的数据容器——像一份打包清单，里面装着视频信息、字幕、评论等不同类型的数据。</p>
+        </div>
+        <div class="pattern-card" style="border-top: 3px solid var(--color-actor-4)">
+          <div class="pattern-icon" style="background: var(--color-actor-4)">🎬</div>
+          <h4 class="pattern-title">文件路径 (Path)</h4>
+          <p class="pattern-desc">extract_keyframes 返回的是 PNG 图片文件路径列表——每张图片对应视频中的一个关键时刻。</p>
+        </div>
+        <div class="pattern-card" style="border-top: 3px solid var(--color-actor-5)">
+          <div class="pattern-icon" style="background: var(--color-actor-5)">👁️</div>
+          <h4 class="pattern-title">描述字符串 (str)</h4>
+          <p class="pattern-desc">analyze_frames 给每帧加上文字描述——从图片到文字，让 LLM 能够理解画面的内容。</p>
+        </div>
+        <div class="pattern-card" style="border-top: 3px solid var(--color-actor-6)">
+          <div class="pattern-icon" style="background: var(--color-actor-6)">📝</div>
+          <h4 class="pattern-title">Markdown 文件</h4>
+          <p class="pattern-desc">最终产物——一份结构化的 .md 文件，直接保存到 Obsidian vault 中供阅读和搜索。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Screen 4: 测验 ========== -->
+    <section class="screen animate-in">
+      <h2 class="screen-heading">模块测验</h2>
+      <p>检验你对数据流和配置系统的理解。</p>
+
+      <div class="quiz-container" id="quiz-module3">
+
+        <div class="quiz-question-block"
+             data-correct="option-b"
+             data-explanation-right="正确！scene_threshold 越小，场景变化检测越敏感，即使很小的画面变化也会被截取，所以抽出更多帧。"
+             data-explanation-wrong="不对。scene_threshold 是场景变化阈值——值越小检测越灵敏，抽出的帧越多。想想调低灵敏度会让相机多拍还是少拍？">
+          <h3 class="quiz-question">如果把 config.yaml 中的 scene_threshold 从 0.3 改为 0.1，会发生什么？</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>抽更少的帧（画面变化不够大就不截）</span>
+            </button>
+            <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>抽更多的帧（更小的变化也会被检测到）</span>
+            </button>
+            <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>没有影响，这个参数只影响画质</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block"
+             data-correct="option-c"
+             data-explanation-right="没错！oMLX 是本地推理服务，帧分析和笔记生成都需要调用 LLM/VLM。服务没启动时，resolve_input 和 fetch_all 可以正常运行，但到了需要 AI 的步骤就会报错。"
+             data-explanation-wrong="再想想。oMLX 是本地推理服务，resolve_input 和 fetch_all 只调 Bilibili API 不需要 oMLX，但帧分析和笔记生成都需要 LLM/VLM 服务。">
+          <h3 class="quiz-question">假设 oMLX 本地服务没有启动，管线会卡在哪一步？</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>第一步 resolve_input()——它需要模型来解析输入</span>
+            </button>
+            <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>第二步 fetch_all()——获取视频信息需要 LLM</span>
+            </button>
+            <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>帧分析或笔记生成——它们依赖 oMLX 提供的 LLM/VLM 服务</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block"
+             data-correct="option-b"
+             data-explanation-right="完全正确！get_llm_client() 通过 if/else 判断 provider 字符串——等于 minimax 走 Anthropic SDK，否则走 OpenAI SDK 连接本地 oMLX。"
+             data-explanation-wrong="不是这样。看 get_llm_client() 的代码：它检查 provider 参数的值——如果是 minimax 就创建 Anthropic 客户端，否则创建 OpenAI 客户端。这是简单的字符串分支判断。">
+          <h3 class="quiz-question">当 provider 设为 &quot;minimax&quot; 时，代码如何决定使用哪个 API？</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>通过 try/except 自动检测哪个 API 可用</span>
+            </button>
+            <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>get_llm_client() 根据 provider 字符串做 if/else 分支选择</span>
+            </button>
+            <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+              <div class="quiz-option-radio"></div>
+              <span>配置文件中直接写死了 API 地址和密钥</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('quiz-module3')">Check Answers</button>
+        <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module3')">Try Again</button>
+      </div>
+    </section>
+
+  </div>
+</section>

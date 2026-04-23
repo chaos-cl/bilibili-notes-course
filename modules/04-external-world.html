@@ -1,0 +1,373 @@
+<!-- MODULE 4: 连接外部世界 -->
+<section class="module" id="module-4" style="background: var(--color-bg-warm)">
+
+  <div class="module-content">
+
+    <!-- ── MODULE HEADER ──────────────────────────────────────── -->
+    <header class="module-header animate-in">
+      <span class="module-number">04</span>
+      <h1 class="module-title">连接外部世界</h1>
+      <p class="module-subtitle">想象你是一个自由职业团队的负责人。团队里有程序员、设计师、翻译……每个人自带工具箱。你不需要自己造工具，但你必须知道——该找谁、用什么工具、如果工具坏了怎么办。</p>
+    </header>
+
+    <!-- ============================================================
+         SCREEN 1 — 五个外部伙伴
+         ============================================================ -->
+    <div class="screen animate-in" id="s1-partners">
+      <h2 class="screen-heading">五个外部伙伴</h2>
+
+      <p>Bilibili Notes 不从零造轮子——它像一个精明的<span class="term" data-definition="项目外包：把专业的工作交给专业的工具去做。你不用自己实现视频下载，yt-dlp 已经做得很好了。你只需要知道怎么调用它。">项目外包商</span>，把专业的工作交给专业的工具。点击每个伙伴，看看他们各自带来什么本事。</p>
+
+      <!-- ── ARCHITECTURE DIAGRAM ─────────────────────────────── -->
+      <div class="arch-diagram animate-in">
+
+        <div class="arch-zone" style="border-top: 3px solid #2A9D8F">
+          <div class="arch-zone-label" style="color: #2A9D8F">命令行工具</div>
+
+          <div class="arch-component" data-desc="bili (bilibili-cli)：B站数据入口——获取视频信息、字幕、评论、下载音频。需要预先登录（bili login）。通过 subprocess.run() 在子进程中调用，返回 YAML/JSON 数据。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#2A9D8F">&#x1F4E5;</span>
+            <span class="arch-component-name">bili</span>
+            <span class="arch-component-tag">B站数据入口</span>
+          </div>
+
+          <div class="arch-component" data-desc="ffmpeg：视频处理瑞士军刀——通过场景变化检测算法（scene detection）抽取关键帧。当两帧画面差异超过阈值时，自动截取那一帧。它不是用 Python 写的，而是被 subprocess.run() 调用的外部命令。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#E76F51">&#x1F3AC;</span>
+            <span class="arch-component-name">ffmpeg</span>
+            <span class="arch-component-tag">视频处理</span>
+          </div>
+
+          <div class="arch-component" data-desc="yt-dlp：视频下载神器——从B站下载完整视频文件到本地。处理了各种反爬机制和格式兼容问题。下载的视频交给 ffmpeg 做场景检测。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#D4A843">&#x2B07;&#xFE0F;</span>
+            <span class="arch-component-name">yt-dlp</span>
+            <span class="arch-component-tag">视频下载</span>
+          </div>
+        </div>
+
+        <div class="arch-zone" style="border-top: 3px solid #7B6DAA">
+          <div class="arch-zone-label" style="color: #7B6DAA">AI 模型服务</div>
+
+          <div class="arch-component" data-desc="oMLX (本地)：Mac 本地模型服务——通过 OpenAI 兼容 API 提供 VLM（看图说话）和 LLM（生成笔记）能力。运行在 localhost:8000，无需联网，无需付费。缺点是模型能力有限，中文笔记质量可能不如云端。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#7B6DAA">&#x1F3E0;</span>
+            <span class="arch-component-name">oMLX</span>
+            <span class="arch-component-tag">本地模型</span>
+          </div>
+
+          <div class="arch-component" data-desc="MiniMax (云端)：在线 AI 服务——使用 Anthropic 兼容 API（Claude 格式）。质量更高但需网络连接和付费 API key。配置文件中 provider 字段控制使用哪个服务商。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#D94F30">&#x2601;&#xFE0F;</span>
+            <span class="arch-component-name">MiniMax</span>
+            <span class="arch-component-tag">云端AI</span>
+          </div>
+        </div>
+
+        <div class="arch-zone" style="border-top: 3px solid #2D8B55">
+          <div class="arch-zone-label" style="color: #2D8B55">本地工具</div>
+
+          <div class="arch-component" data-desc="mlx-whisper：Apple Silicon 语音转文字引擎——在 Mac 本地 GPU 上运行 Whisper 模型，把音频文件转成带时间戳的文字。无需联网，速度极快。当视频没有字幕时，它是关键的后备方案。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#2D8B55">&#x1F399;&#xFE0F;</span>
+            <span class="arch-component-name">mlx-whisper</span>
+            <span class="arch-component-tag">语音转文字</span>
+          </div>
+        </div>
+
+        <div class="arch-zone" style="border-top: 3px solid #D4A843">
+          <div class="arch-zone-label" style="color: #D4A843">笔记系统</div>
+
+          <div class="arch-component" data-desc="Obsidian：知识管理工具——最终笔记的保存地。其实只是本地文件系统中的一个 Markdown 文件夹。程序用 Path.write_text() 写入 .md 文件和图片，Obsidian 自动识别并展示。" onclick="showArchDesc(this)">
+            <span class="arch-component-icon" style="color:#D4A843">&#x1F4DD;</span>
+            <span class="arch-component-name">Obsidian</span>
+            <span class="arch-component-tag">知识管理</span>
+          </div>
+        </div>
+
+        <div class="arch-description" id="arch-desc">
+          <p style="color:var(--color-text-muted);font-style:italic">点击上方任意组件，查看它的角色描述。</p>
+        </div>
+
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F465;</span>
+        <div class="callout-content">
+          <span class="callout-title">自由职业团队比喻</span>
+          <p>你（Pipeline）是团队负责人。bili 是跑腿的快递员，ffmpeg 是摄影师，yt-dlp 是搬运工，oMLX/MiniMax 是翻译官，mlx-whisper 是速记员，Obsidian 是档案柜。你不亲自下场——你只负责在正确的时间找正确的人。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 2 — API 客户端：与外部服务沟通的翻译官
+         ============================================================ -->
+    <div class="screen animate-in" id="s2-api-client">
+      <h2 class="screen-heading">API 客户端——与外部服务沟通的翻译官</h2>
+
+      <p>团队里有说中文的，有说英文的。<span class="term" data-definition="API 客户端就像一个翻译官，它把你程序的请求翻译成外部服务能听懂的语言（HTTP 请求），再把外部服务的回复翻译回你的程序能理解的数据格式。">API 客户端</span>就是那个翻译官——它知道怎么跟本地 oMLX 说 OpenAI 方言，也知道怎么跟云端 MiniMax 说 Anthropic 方言。</p>
+
+      <p>先看"翻译官的调度中心"——<code>get_llm_client()</code>：</p>
+
+      <!-- ── CODE TRANSLATION: get_llm_client ───────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; common.py</span>
+<span class="code-keyword">def</span> <span class="code-function">get_llm_client</span>(config: <span class="code-string">dict</span>,
+                         provider: <span class="code-string">str</span> | <span class="code-string">None</span> = <span class="code-keyword">None</span>):
+    provider = provider <span class="code-keyword">or</span> config.<span class="code-function">get</span>(<span class="code-string">"provider"</span>, <span class="code-string">"omlx"</span>)
+    <span class="code-keyword">if</span> provider == <span class="code-string">"minimax"</span>:
+        mm = config[<span class="code-string">"minimax"</span>]
+        api_key = os.<span class="code-function">getenv</span>(mm[<span class="code-string">"api_key_env"</span>], <span class="code-string">""</span>)
+        client = <span class="code-function">Anthropic</span>(
+            base_url=mm[<span class="code-string">"base_url"</span>],
+            api_key=api_key
+        )
+        <span class="code-keyword">return</span> client, mm[<span class="code-string">"model"</span>], <span class="code-string">"anthropic"</span>
+    <span class="code-keyword">else</span>:
+        client = <span class="code-function">OpenAI</span>(
+            base_url=config[<span class="code-string">"omlx"</span>][<span class="code-string">"base_url"</span>],
+            api_key=config[<span class="code-string">"omlx"</span>].<span class="code-function">get</span>(<span class="code-string">"api_key"</span>, <span class="code-string">""</span>),
+        )
+        <span class="code-keyword">return</span> client, config[<span class="code-string">"omlx"</span>][<span class="code-string">"llm_model"</span>], <span class="code-string">"openai"</span></div>
+        <div class="translation-english">
+          <span class="translation-label">逐行白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>get_llm_client(config, provider)</strong> &mdash; 翻译官的调度中心：根据配置选出正确的翻译方式</div>
+            <div class="tl"><strong>provider = provider or config.get(...)</strong> &mdash; 优先用传入的参数，没有就看配置文件，都没有就默认用 omlx（本地）</div>
+            <div class="tl"><strong>if provider == "minimax"</strong> &mdash; 走云端路线：创建 Anthropic 客户端</div>
+            <div class="tl"><strong>os.getenv(mm["api_key_env"])</strong> &mdash; 从环境变量取 API 密钥（不硬编码在代码里）</div>
+            <div class="tl"><strong>Anthropic(base_url=..., api_key=...)</strong> &mdash; 用 Anthropic SDK 创建客户端，连接 MiniMax 服务</div>
+            <div class="tl"><strong>return (client, model, "anthropic")</strong> &mdash; 返回三元组：客户端对象、模型名、API 协议类型</div>
+            <div class="tl"><strong>else: OpenAI(base_url=...)</strong> &mdash; 走本地路线：用 OpenAI SDK 连接 oMLX 服务</div>
+            <div class="tl"><strong>return (client, model, "openai")</strong> &mdash; 本地服务也返回三元组，协议类型标记为 openai</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F517;</span>
+        <div class="callout-content">
+          <span class="callout-title">为什么用两种不同的 SDK？</span>
+          <p>oMLX 本地服务实现了 <span class="term" data-definition="OpenAI API 是 OpenAI 公司定义的一套 HTTP 接口规范。很多其他 AI 服务（包括本地的 oMLX）也实现了这套规范，这样使用 OpenAI SDK 的代码就能无缝对接。">OpenAI 兼容接口</span>，所以用 <code>OpenAI</code> SDK 连接。MiniMax 云端服务实现了 <span class="term" data-definition="Anthropic API 是 Anthropic 公司（Claude 的开发商）定义的 HTTP 接口规范。MiniMax 服务兼容这套规范，所以用 Anthropic SDK 调用。">Anthropic 兼容接口</span>，所以用 <code>Anthropic</code> SDK 连接。这就是为什么 <code>get_llm_client()</code> 返回的第三个值是协议类型——调用方需要知道该用哪种消息格式。</p>
+        </div>
+      </div>
+
+      <p>再看"快递员的应急预案"——当 bili CLI 被限流时怎么重试：</p>
+
+      <!-- ── CODE TRANSLATION: _run_bili ────────────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python &mdash; fetch_data.py</span>
+<span class="code-keyword">def</span> <span class="code-function">_run_bili</span>(args: <span class="code-string">list</span>[<span class="code-string">str</span>], retries: <span class="code-string">int</span> = <span class="code-value">3</span>) -> <span class="code-string">str</span>:
+    <span class="code-keyword">for</span> attempt <span class="code-keyword">in</span> <span class="code-function">range</span>(retries):
+        result = subprocess.<span class="code-function">run</span>(
+            [<span class="code-string">"bili"</span>, *args],
+            capture_output=<span class="code-value">True</span>, text=<span class="code-value">True</span>,
+        )
+        combined = (result.stdout + result.stderr).<span class="code-function">lower</span>()
+        <span class="code-keyword">if</span> result.returncode == <span class="code-value">0</span> \
+           <span class="code-keyword">and</span> <span class="code-string">"412"</span> <span class="code-keyword">not in</span> combined:
+            <span class="code-keyword">return</span> result.stdout
+        <span class="code-keyword">if</span> <span class="code-string">"412"</span> <span class="code-keyword">in</span> combined:
+            wait = <span class="code-value">5</span> * (attempt + <span class="code-value">1</span>)
+            logger.<span class="code-function">warning</span>(<span class="code-string">"bili 412 限流，等待 %ds"</span>, wait)
+            time.<span class="code-function">sleep</span>(wait)
+            <span class="code-keyword">continue</span></div>
+        <div class="translation-english">
+          <span class="translation-label">逐行白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>_run_bili(args, retries=3)</strong> &mdash; 调用 bili 命令行工具的包装函数，最多重试 3 次</div>
+            <div class="tl"><strong>subprocess.run(["bili", *args])</strong> &mdash; 在子进程中执行 bili 命令，捕获输出</div>
+            <div class="tl"><strong>combined = stdout + stderr</strong> &mdash; 把标准输出和错误输出合并，统一检查</div>
+            <div class="tl"><strong>returncode == 0 and "412" not in combined</strong> &mdash; 成功且没有被限流？直接返回结果</div>
+            <div class="tl"><strong>if "412" in combined</strong> &mdash; 被B站限流了（<span class="term" data-definition="HTTP 412 Precondition Failed：B站 API 返回的状态码，表示请求频率过高，触发了反爬机制。需要等待一段时间后重试。">412</span> 状态码）？</div>
+            <div class="tl"><strong>wait = 5 * (attempt + 1)</strong> &mdash; 等待时间线性递增：第1次等5秒，第2次等10秒，第3次等15秒</div>
+            <div class="tl"><strong>logger.warning(...)</strong> &mdash; 把限流事件记到日志里——这是黑匣子的关键记录</div>
+            <div class="tl"><strong>time.sleep(wait) + continue</strong> &mdash; 等一等，回去再试一次</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F504;</span>
+        <div class="callout-content">
+          <span class="callout-title">两个关键的通信模式</span>
+          <p><strong>模式一：API 客户端模式</strong>（get_llm_client）——用 SDK 对象封装 HTTP 请求，代码更简洁。<strong>模式二：子进程模式</strong>（_run_bili）——用 subprocess.run() 调用外部命令行工具，拿到文本输出后自己解析。选择哪种取决于外部工具的形态：有 SDK 就用 SDK，是命令行工具就用子进程。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 3 — 每种外部工具都可能失败
+         ============================================================ -->
+    <div class="screen animate-in" id="s3-failure-modes">
+      <h2 class="screen-heading">每种外部工具都可能失败</h2>
+
+      <p>团队里每个人都有可能"掉链子"。快递员可能被门卫拦住，摄影师可能忘带镜头，翻译官可能突然失联。好的项目负责人不为每个风险焦虑——而是为每种失败<span class="term" data-definition="预案（Fallback Plan）：在主方案失败时自动启用的备选方案。就像飞机有备用引擎，软件也需要备用路径。">准备预案</span>。</p>
+
+      <p>点击每张卡片，看看当外部工具"掉链子"时，流水线是怎么应对的：</p>
+
+      <!-- ── FAILURE PATTERN CARDS ─────────────────────────────── -->
+      <div class="pattern-cards stagger-children">
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #E76F51">
+          <div class="pattern-icon" style="background:#FDE8E0;color:#E76F51">&#x26A0;&#xFE0F;</div>
+          <div class="pattern-title">bili CLI 412 限流</div>
+          <p class="pattern-desc"><strong>症状：</strong>B站服务器返回 <span class="term" data-definition="412 状态码表示 B站认为你请求太频繁了，触发了速率限制（rate limiting）。这是一种常见的反爬机制。">412 状态码</span>，请求被拒绝。</p>
+          <p class="pattern-desc"><strong>应对：</strong><code>_run_bili()</code> 自动重试最多 3 次，等待时间<strong>线性递增</strong>（5s、10s、15s）。每次重试都记录 warning 日志。3 次都失败才抛异常。</p>
+          <p class="pattern-desc" style="color:var(--color-success);font-weight:600">&#x2713; 自动恢复，用户无感知</p>
+        </div>
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #D4A843">
+          <div class="pattern-icon" style="background:#FEF3C7;color:#D4A843">&#x1F4F7;</div>
+          <div class="pattern-title">ffmpeg 场景检测 0 帧</div>
+          <p class="pattern-desc"><strong>症状：</strong>ffmpeg 跑完了但没检测到任何场景变化，返回 0 张关键帧。可能是视频画面几乎静止，或阈值设置太高。</p>
+          <p class="pattern-desc"><strong>应对：</strong>回退到<span class="term" data-definition="等间隔采样（Uniform Sampling）：当基于内容的智能抽帧失败时，简单地按固定时间间隔截取帧。比如每 10 秒截一帧。虽然不如场景检测精准，但保证至少有图片。">等间隔采样</span>——不管场景有没有变化，每隔固定时间截一帧，保证至少能拿到一些图片。</p>
+          <p class="pattern-desc" style="color:var(--color-success);font-weight:600">&#x2713; 功能降级，质量略降但不中断</p>
+        </div>
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #2A9D8F">
+          <div class="pattern-icon" style="background:#E6F5F3;color:#2A9D8F">&#x1F399;&#xFE0F;</div>
+          <div class="pattern-title">字幕不可用</div>
+          <p class="pattern-desc"><strong>症状：</strong>视频没有上传字幕，bili CLI 返回空字幕数据。这在 B站很常见——不是每个 UP 主都会上传字幕。</p>
+          <p class="pattern-desc"><strong>应对：</strong>触发 Plan B——下载音频文件，交给 <span class="term" data-definition="mlx-whisper 是 Whisper 模型的 Apple MLX 加速版本，利用 Apple Silicon 的 GPU 进行语音识别。本地运行，速度快，无需联网。">mlx-whisper</span> 在本地做语音转文字。这一步最耗时，但保证总能拿到文字内容。</p>
+          <p class="pattern-desc" style="color:var(--color-success);font-weight:600">&#x271c; 自动切换，速度变慢但结果可靠</p>
+        </div>
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #7B6DAA">
+          <div class="pattern-icon" style="background:#F0EEF7;color:#7B6DAA">&#x1F3E0;</div>
+          <div class="pattern-title">oMLX 服务未启动</div>
+          <p class="pattern-desc"><strong>症状：</strong>调用本地 oMLX 接口时连接被拒绝（Connection refused），说明服务没运行。</p>
+          <p class="pattern-desc"><strong>应对：</strong>异常被 try/except 捕获，logger 记录错误信息，该步骤（帧分析或笔记生成）被跳过。其他不依赖 AI 的步骤正常执行。</p>
+          <p class="pattern-desc" style="color:var(--color-warning);font-weight:600">&#x26A0; 跳过该步骤，笔记质量下降</p>
+        </div>
+
+        <div class="pattern-card animate-in" style="border-top: 3px solid #D94F30">
+          <div class="pattern-icon" style="background:#FDEEE9;color:#D94F30">&#x1F511;</div>
+          <div class="pattern-title">API key 缺失</div>
+          <p class="pattern-desc"><strong>症状：</strong>使用 MiniMax 云端服务时，环境变量中没有设置对应的 API 密钥。</p>
+          <p class="pattern-desc"><strong>应对：</strong><code>os.getenv(mm["api_key_env"], "")</code> 返回空字符串。Anthropic SDK 发送请求时会被服务端拒绝并返回 401 认证错误。<span class="term" data-definition="启动时检查（Fail-fast）：在程序刚开始运行时就验证关键配置是否正确，而不是等到运行到一半才报错。这样用户能立即发现问题。">启动时检查</span>可以在程序启动时就报告配置错误。</p>
+          <p class="pattern-desc" style="color:var(--color-error);font-weight:600">&#x2717; 不可恢复，需要用户手动配置</p>
+        </div>
+
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4CB;</span>
+        <div class="callout-content">
+          <span class="callout-title">失败应对的三个等级</span>
+          <p><strong style="color:var(--color-success)">自动恢复</strong>（绿色）——程序自己搞定，用户完全不知道出过问题。如 412 重试。<br>
+          <strong style="color:var(--color-warning)">功能降级</strong>（黄色）——质量打折但能用。如 oMLX 挂了就跳过 AI 步骤。<br>
+          <strong style="color:var(--color-error)">需要人工</strong>（红色）——程序无法自行解决，需要用户介入。如 API key 缺失。</p>
+        </div>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F465;</span>
+        <div class="callout-content">
+          <span class="callout-title">团队比喻</span>
+          <p>快递员被门卫拦了？等一会儿再来（重试）。摄影师忘带镜头？用手机拍（降级）。速记员没来？先做别的事等他到（跳过）。翻译官没带证件？没法工作，需要他自己回去拿（需要人工）。每种"掉链子"都有对应的预案——这就是健壮的团队。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 4 — QUIZ
+         ============================================================ -->
+    <div class="screen animate-in" id="s4-quiz">
+      <h2 class="screen-heading">检验一下你的理解</h2>
+
+      <p>三道情景题，测试你对外部工具协作和故障应对的理解。这些都是在实际使用中会遇到的真实问题。</p>
+
+      <div class="quiz-container" id="quiz-module4">
+
+        <!-- ── Q1 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="retry" data-explanation-right="正确！_run_bili() 检测到 412 状态码后不会立刻放弃——它会自动等待递增的时间（5s、10s、15s）后重试，最多尝试 3 次。这是应对 API 限流的标准策略：慢一点，再来一次。" data-explanation-wrong="再看一下 _run_bili() 的代码。它不是直接放弃，也不是无限重试。检测到 412 后，它会线性递增等待时间（5s、10s、15s），最多重试 3 次。这是给 B站服务器'喘息'时间的策略。">
+          <p class="quiz-question">1. bili CLI 返回 412 限流，流水线怎么做？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="crash" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>直接报错退出，提示用户稍后再试</span>
+            </button>
+            <button class="quiz-option" data-value="retry" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>自动等待递增时间（5s、10s、15s）后重试，最多 3 次</span>
+            </button>
+            <button class="quiz-option" data-value="skip" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>跳过 bili，用其他方式获取数据</span>
+            </button>
+            <button class="quiz-option" data-value="infinite" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>每隔 1 秒无限重试直到成功</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q2 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="dual" data-explanation-right="没错！本地 oMLX 实现的是 OpenAI 兼容 API，所以用 OpenAI SDK 连接。云端 MiniMax 实现的是 Anthropic 兼容 API，所以用 Anthropic SDK 连接。get_llm_client() 根据配置中的 provider 字段决定走哪条路，返回对应类型的客户端和协议标识。" data-explanation-wrong="关键在于两种服务使用了不同的 API 协议：oMLX（本地）兼容 OpenAI 格式，MiniMax（云端）兼容 Anthropic 格式。这不是为了备份或负载均衡，而是因为这两个外部工具本身就使用不同的接口标准。get_llm_client() 的 if/else 就是做协议选择。">
+          <p class="quiz-question">2. 为什么需要同时支持 OpenAI 和 Anthropic 两种 API？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="backup" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>为了互为备份——一个挂了用另一个</span>
+            </button>
+            <button class="quiz-option" data-value="dual" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>本地 oMLX 用 OpenAI 格式，MiniMax 云端用 Anthropic 格式——两个外部工具协议不同</span>
+            </button>
+            <button class="quiz-option" data-value="legacy" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>历史遗留——最初只用 OpenAI，后来加了 Anthropic 但没删旧的</span>
+            </button>
+            <button class="quiz-option" data-value="speed" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>Anthropic 更快，OpenAI 更准，按场景切换</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q3 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="except" data-explanation-right="正确！extract_keyframes() 被 try/except 包裹，抛出的异常会被捕获。pipeline.py 只记录一条 warning 日志，然后继续执行后续步骤。笔记仍然会生成，只是没有关键帧部分。" data-explanation-wrong="仔细看 pipeline.py 里的代码：extract_keyframes() 外面包着 try/except。如果 ffmpeg 没装导致异常，会被 except 捕获，只记一条 warning 日志。程序不会崩溃——笔记仍然会生成，只是缺少关键帧部分。这就是优雅降级。">
+          <p class="quiz-question">3. ffmpeg 没安装会怎样？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="crash3" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序崩溃退出，显示 FileNotFoundError</span>
+            </button>
+            <button class="quiz-option" data-value="install" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序自动安装 ffmpeg 然后继续</span>
+            </button>
+            <button class="quiz-option" data-value="except" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>extract_frames 抛异常被 try/except 捕获，跳过帧抽取，继续生成笔记</span>
+            </button>
+            <button class="quiz-option" data-value="hang" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>程序卡住等待 ffmpeg 响应直到超时</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── QUIZ CONTROLS ────────────────────────────────────── -->
+        <div>
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module4')">检查答案</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module4')">重新作答</button>
+        </div>
+
+      </div>
+
+      <!-- ── MODULE SUMMARY CALLOUT ─────────────────────────────── -->
+      <div class="callout callout-accent" style="margin-top:var(--space-8)">
+        <span class="callout-icon">&#x1F3C1;</span>
+        <div class="callout-content">
+          <span class="callout-title">模块 4 总结：你的外部工具箱</span>
+          <p>这个模块你认识了五个外部伙伴：bili（数据获取）、ffmpeg/yt-dlp（视频处理）、oMLX/MiniMax（AI 推理）、mlx-whisper（语音转录）、Obsidian（笔记存储）。</p>
+          <p>核心原则：<strong>你不需要造每一个工具，但你必须知道哪个工具做什么、怎么调用它、它坏了怎么办。</strong>这就是"连接外部世界"的真谛——不是什么都自己做，而是做好调度和容错。</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.module-content -->
+
+</section><!-- /#module-4 -->

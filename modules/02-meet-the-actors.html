@@ -1,0 +1,374 @@
+<!-- MODULE 2: 认识幕后角色 -->
+<section class="module" id="module-2" style="background: var(--color-bg-warm)">
+
+  <div class="module-content">
+
+    <!-- ── MODULE HEADER ──────────────────────────────────────── -->
+    <header class="module-header animate-in">
+      <span class="module-number">02</span>
+      <h1 class="module-title">认识幕后角色</h1>
+      <p class="module-subtitle">每部电影都有一群各司其职的幕后工作者——导演统筹全局，场务负责后勤，摄影师捕捉画面。Bilibili Notes 也是一部"电影"，有六位核心演员。让我们认识一下他们。</p>
+    </header>
+
+    <!-- ============================================================
+         SCREEN 1 — 六位演员各司其职
+         ============================================================ -->
+    <div class="screen animate-in" id="s1-actors">
+      <h2 class="screen-heading">六位演员各司其职</h2>
+
+      <p>Bilibili Notes 的 <code>scripts/</code> 目录下有 6 个 Python 文件，每个文件就是一个"角色"，负责流水线中的一个环节。他们各有所长，互不越界。</p>
+
+      <p>用电影剧组来比喻：<span class="term" data-definition="Pipeline（流水线）是整个程序的总调度器，负责按顺序调用各个脚本。它就像电影导演，不亲自下场演戏，但决定谁该在什么时候上场。">Pipeline</span> 是导演，下面六位是剧组成员。</p>
+
+      <div class="pattern-cards stagger-children">
+
+        <!-- 1. common.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #D4A843">
+          <div class="pattern-icon" style="background:#FEF3C7;color:#D4A843">&#x1F3E0;</div>
+          <div class="pattern-title"><code>common.py</code> &mdash; 后勤管家</div>
+          <p class="pattern-desc">剧组的大管家。加载 <span class="term" data-definition="配置文件（config.yaml）存储了所有外部服务的地址、密钥、参数等设置。程序启动时读取它，就像剧组开机前先拿到通告单。">配置</span>、初始化<span class="term" data-definition="日志（logging）是程序运行时自动记录的操作痕迹。出了问题，查日志就能还原事故现场——就像飞机的黑匣子。">日志</span>、创建 <span class="term" data-definition="API 客户端是程序用来和外部服务（如 B 站服务器、AI 模型接口）通信的工具。它封装了网络请求的细节，让其他脚本不用关心底层的通信协议。">API 客户端</span>、实现自动重试。所有其他演员都依赖它提供的基础设施。</p>
+        </div>
+
+        <!-- 2. fetch_data.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #2A9D8F">
+          <div class="pattern-icon" style="background:#E6F5F3;color:#2A9D8F">&#x1F50D;</div>
+          <div class="pattern-title"><code>fetch_data.py</code> &mdash; 数据猎手</div>
+          <p class="pattern-desc">剧组的外景勘察员。调用 <span class="term" data-definition="bili CLI 是一个命令行工具，用来从 B 站服务器获取视频信息、字幕、评论等数据。fetch_data.py 通过在终端运行它来获取数据。">bili CLI</span>，从 B 站服务器拉取视频信息、字幕、评论，并下载音频文件。没有它，其他演员就没有"素材"可以加工。</p>
+        </div>
+
+        <!-- 3. extract_frames.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #E76F51">
+          <div class="pattern-icon" style="background:#FDE8E0;color:#E76F51">&#x1F3AC;</div>
+          <div class="pattern-title"><code>extract_frames.py</code> &mdash; 画面捕手</div>
+          <p class="pattern-desc">剧组的摄影师。先用 <span class="term" data-definition="yt-dlp 是一个开源的命令行工具，用于从 B 站、YouTube 等视频网站下载视频文件。它处理了各种反爬机制和格式兼容问题。">yt-dlp</span> 下载完整视频，再用 <span class="term" data-definition="ffmpeg 是一个强大的音视频处理工具。在这里它通过"场景检测"算法识别画面变化显著的瞬间，把这些关键时刻截取为静态图片。">ffmpeg</span> 进行场景检测，自动抽取最有代表性的关键帧画面。</p>
+        </div>
+
+        <!-- 4. transcribe_audio.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #2D8B55">
+          <div class="pattern-icon" style="background:#E8F5EE;color:#2D8B55">&#x1F3A4;</div>
+          <div class="pattern-title"><code>transcribe_audio.py</code> &mdash; 语音转录师</div>
+          <p class="pattern-desc">剧组的录音师。用 <span class="term" data-definition="mlx-whisper 是 Apple MLX 框架加速版的 Whisper 语音识别模型。它在本地的 Apple Silicon 芯片上运行，把音频自动转成带时间戳的文字。">mlx-whisper</span> 在本地运行语音识别，把音频文件转成带时间戳的文字转录。当视频没有字幕时，它是关键的"兜底方案"。</p>
+        </div>
+
+        <!-- 5. analyze_frames.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #7B6DAA">
+          <div class="pattern-icon" style="background:#F0EEF7;color:#7B6DAA">&#x1F441;</div>
+          <div class="pattern-title"><code>analyze_frames.py</code> &mdash; 画面解读师</div>
+          <p class="pattern-desc">剧组的剪辑师。把每一张关键帧图片发给 <span class="term" data-definition="VLM 即 Vision Language Model（视觉语言模型），是一种能"看懂"图片并用自然语言描述内容的 AI 模型。在项目中它负责为每张关键帧生成文字描述。">VLM</span>（视觉语言模型），让 AI 用文字描述画面的内容——屏幕上显示了什么、图表说明了什么、文字写了什么。</p>
+        </div>
+
+        <!-- 6. generate_notes.py -->
+        <div class="pattern-card animate-in" style="border-top: 3px solid #D94F30">
+          <div class="pattern-icon" style="background:#FDEEE9;color:#D94F30">&#x1F4DD;</div>
+          <div class="pattern-title"><code>generate_notes.py</code> &mdash; 笔记作家</div>
+          <p class="pattern-desc">剧组的编剧。收集所有素材——字幕、转录文本、关键帧描述、评论——交给 <span class="term" data-definition="LLM 即 Large Language Model（大语言模型），如 GPT、Claude 等。在本项目中，它负责阅读所有素材并按照预设模板生成结构化的 Markdown 笔记。">LLM</span>，按照预设模板生成结构清晰的 Obsidian Markdown 笔记。最后一棒。</p>
+        </div>
+
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F3AC;</span>
+        <div class="callout-content">
+          <span class="callout-title">剧组比喻</span>
+          <p>导演（Pipeline）统筹全局 &rarr; 场务（common.py）搭好舞台 &rarr; 外景勘察（fetch_data.py）收集素材 &rarr; 摄影师（extract_frames.py）拍关键画面 &rarr; 录音师（transcribe_audio.py）记下声音 &rarr; 剪辑师（analyze_frames.py）解读画面 &rarr; 编剧（generate_notes.py）写出成片。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 2 — 每个角色做什么
+         ============================================================ -->
+    <div class="screen animate-in" id="s2-what-they-do">
+      <h2 class="screen-heading">每个角色做什么</h2>
+
+      <p>光知道名字还不够。让我们打开每个脚本的"工作手册"——看看他们各自的核心函数长什么样，每一行代码在干什么。</p>
+
+      <!-- ── common.py: load_config ────────────────────────────── -->
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F3E0;</span>
+        <div class="callout-content">
+          <span class="callout-title">后勤管家 <code>common.py</code> &mdash; 加载配置</span>
+          <p>大管家开机做的第一件事：读取配置文件。就像剧组开机前先拿到通告单，上面写了所有服务器的地址和参数。</p>
+        </div>
+      </div>
+
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python</span>
+<span class="code-keyword">def</span> <span class="code-function">load_config</span>(config_path: <span class="code-string">str</span> | <span class="code-string">None</span> = <span class="code-keyword">None</span>) -> <span class="code-string">dict</span>:
+    path = <span class="code-function">Path</span>(config_path) <span class="code-keyword">if</span> config_path <span class="code-keyword">else</span> _PROJECT_ROOT / <span class="code-string">"config.yaml"</span>
+    <span class="code-keyword">if not</span> path.<span class="code-function">exists</span>():
+        <span class="code-keyword">raise</span> <span class="code-function">FileNotFoundError</span>(<span class="code-string">f"配置文件不存在: {path}"</span>)
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(path) <span class="code-keyword">as</span> f:
+        config = yaml.<span class="code-function">safe_load</span>(f)
+    <span class="code-keyword">if</span> env_url := os.<span class="code-function">getenv</span>(<span class="code-string">"OMLX_BASE_URL"</span>):
+        config.<span class="code-function">setdefault</span>(<span class="code-string">"omlx"</span>, {})[<span class="code-string">"base_url"</span>] = env_url
+    <span class="code-keyword">return</span> config
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>config_path</strong> &mdash; 配置文件路径，不传就用默认的 config.yaml</div>
+            <div class="tl"><strong>FileNotFoundError</strong> &mdash; 配置文件不存在就立刻报错，不让程序带着错误往下跑</div>
+            <div class="tl"><strong>yaml.safe_load</strong> &mdash; 把 YAML 文件解析成 Python 字典</div>
+            <div class="tl"><strong>env_url</strong> &mdash; 环境变量覆盖：如果设了 OMLX_BASE_URL，就用它替换配置里的地址</div>
+            <div class="tl"><strong>return config</strong> &mdash; 返回完整的配置字典，其他所有演员都要用它</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── fetch_data.py: fetch_video_info ───────────────────── -->
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F50D;</span>
+        <div class="callout-content">
+          <span class="callout-title">数据猎手 <code>fetch_data.py</code> &mdash; 获取视频信息</span>
+          <p>数据猎手收到 BV 号后，调用 bili CLI 去 B 站服务器拉取视频的基本信息——标题、作者、链接。</p>
+        </div>
+      </div>
+
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python</span>
+<span class="code-keyword">def</span> <span class="code-function">fetch_video_info</span>(bvid: <span class="code-string">str</span>) -> <span class="code-string">dict</span>:
+    data = <span class="code-function">_run_bili_yaml</span>([<span class="code-string">"video"</span>, bvid])
+    v = data.<span class="code-function">get</span>(<span class="code-string">"data"</span>, {}).<span class="code-function">get</span>(<span class="code-string">"video"</span>, {})
+    <span class="code-keyword">return</span> {
+        <span class="code-string">"bvid"</span>:   v.<span class="code-function">get</span>(<span class="code-string">"bvid"</span>, bvid),
+        <span class="code-string">"title"</span>:  v.<span class="code-function">get</span>(<span class="code-string">"title"</span>, <span class="code-string">""</span>),
+        <span class="code-string">"author"</span>: v.<span class="code-function">get</span>(<span class="code-string">"owner"</span>, {}).<span class="code-function">get</span>(<span class="code-string">"name"</span>, <span class="code-string">""</span>),
+        <span class="code-string">"url"</span>:    v.<span class="code-function">get</span>(<span class="code-string">"url"</span>, <span class="code-string">f"https://www.bilibili.com/video/{bvid}"</span>),
+    }
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>_run_bili_yaml</strong> &mdash; 调用 bili CLI 命令，传入 "video" 和 BV 号，返回 YAML 数据</div>
+            <div class="tl"><strong>.get("data", {}).get("video", {})</strong> &mdash; 安全地逐层取嵌套数据，缺了哪层都不崩溃</div>
+            <div class="tl"><strong>v.get("bvid", bvid)</strong> &mdash; 有值就用值，没有就用传入的 BV 号兜底</div>
+            <div class="tl"><strong>v.get("owner", {}).get("name")</strong> &mdash; 作者名在嵌套结构里，逐层安全取出</div>
+            <div class="tl"><strong>return dict</strong> &mdash; 返回一个干净的四字段字典：BV号、标题、作者、链接</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── extract_frames.py: extract_keyframes ─────────────── -->
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F3AC;</span>
+        <div class="callout-content">
+          <span class="callout-title">画面捕手 <code>extract_frames.py</code> &mdash; 抽取关键帧</span>
+          <p>画面捕手用 ffmpeg 做"场景检测"——当两帧画面差异超过阈值时，就认为这是一个新场景，截取那一帧。下面是函数的开头部分。</p>
+        </div>
+      </div>
+
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python</span>
+<span class="code-keyword">def</span> <span class="code-function">extract_keyframes</span>(video_path: Path, output_dir: Path, config: <span class="code-string">dict</span>) -> <span class="code-string">list</span>[Path]:
+    frames_cfg = config.<span class="code-function">get</span>(<span class="code-string">"frames"</span>, {})
+    threshold = frames_cfg.<span class="code-function">get</span>(<span class="code-string">"scene_threshold"</span>, <span class="code-number">0.3</span>)
+    max_frames = frames_cfg.<span class="code-function">get</span>(<span class="code-string">"max_frames"</span>, <span class="code-number">20</span>)
+    output_dir.<span class="code-function">mkdir</span>(parents=<span class="code-keyword">True</span>, exist_ok=<span class="code-keyword">True</span>)
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>video_path</strong> &mdash; 视频文件路径（yt-dlp 下载好的）</div>
+            <div class="tl"><strong>scene_threshold = 0.3</strong> &mdash; 场景变化阈值：0.3 表示画面变化达到 30% 就认为换了场景</div>
+            <div class="tl"><strong>max_frames = 20</strong> &mdash; 最多抽 20 帧，避免短视频也抽一堆没意义的图</div>
+            <div class="tl"><strong>mkdir(parents=True)</strong> &mdash; 自动创建输出目录，包括所有不存在的父目录</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F4A1;</span>
+        <div class="callout-content">
+          <span class="callout-title">代码模式观察</span>
+          <p>你有没有注意到三个函数的共同点？它们都在用 <code>.get(key, default)</code> 做防御性取值——有值就用，没有就用默认值。这是"永不崩溃"哲学的基石。后面模块会详细讲。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 3 — 他们如何协作
+         ============================================================ -->
+    <div class="screen animate-in" id="s3-collaboration">
+      <h2 class="screen-heading">他们如何协作</h2>
+
+      <p>六个角色不是各干各的。Pipeline（导演）在<span class="term" data-definition="群聊（Group Chat）在这里是一个比喻：Pipeline 像一个项目经理在团队群里发指令，@不同的人去干活，然后每个人在群里汇报进度。">团队群聊</span>里发指令、分配任务、收集结果。点击"下一步"，看他们如何配合完成一次完整的流水线。</p>
+
+      <!-- ── GROUP CHAT ANIMATION ──────────────────────────────── -->
+      <div class="chat-window" id="chat-module2">
+
+        <!-- MESSAGES (hidden by default, revealed by JS engine) -->
+        <div class="chat-messages">
+
+          <div class="chat-message" data-sender="Pipeline" style="display:none">
+            <div class="chat-avatar" style="background:#D94F30">P</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#D94F30">Pipeline (导演)</span>
+              <p>开始处理 BV1ABcsztEcY！DataHunter，去拿数据！</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="DataHunter" style="display:none">
+            <div class="chat-avatar" style="background:#2A9D8F">D</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#2A9D8F">DataHunter (数据猎手)</span>
+              <p>收到！正在调用 bili CLI 获取视频信息、字幕和评论...</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="DataHunter" style="display:none">
+            <div class="chat-avatar" style="background:#2A9D8F">D</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#2A9D8F">DataHunter (数据猎手)</span>
+              <p>数据拿到了！字幕可用，音频也下载好了。</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="Pipeline" style="display:none">
+            <div class="chat-avatar" style="background:#D94F30">P</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#D94F30">Pipeline (导演)</span>
+              <p>FrameCatcher，该你上场了！用 ffmpeg 抽关键帧。</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="FrameCatcher" style="display:none">
+            <div class="chat-avatar" style="background:#E76F51">F</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#E76F51">FrameCatcher (画面捕手)</span>
+              <p>场景检测完成，抽到 15 帧关键画面！</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="Pipeline" style="display:none">
+            <div class="chat-avatar" style="background:#D94F30">P</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#D94F30">Pipeline (导演)</span>
+              <p>NoteWriter，所有材料都齐了——字幕、帧描述、评论。生成笔记吧！</p>
+            </div>
+          </div>
+
+          <div class="chat-message" data-sender="NoteWriter" style="display:none">
+            <div class="chat-avatar" style="background:#D94F30">N</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color:#D94F30">NoteWriter (笔记作家)</span>
+              <p>笔记已生成！保存到 Obsidian vault 了。</p>
+            </div>
+          </div>
+
+        </div><!-- /.chat-messages -->
+
+        <!-- TYPING INDICATOR -->
+        <div class="chat-typing" style="display:none">
+          <div class="chat-avatar" id="chat-module2-typing-avatar" style="background:#D94F30">P</div>
+          <div class="chat-typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="chat-controls">
+          <button class="btn btn-primary chat-next-btn">下一步</button>
+          <button class="btn chat-all-btn">全部播放</button>
+          <button class="btn chat-reset-btn">重置</button>
+          <span class="chat-progress">0 / 7 messages</span>
+        </div>
+
+      </div><!-- /.chat-window -->
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4AC;</span>
+        <div class="callout-content">
+          <span class="callout-title">协作的关键</span>
+          <p>注意对话中 Pipeline 从不自己干活——它只发指令、收集结果。每个角色拿到指令后独立完成自己的任务，然后把结果"传"给下一个角色。这就是<span class="term" data-definition="模块化（Modularity）是把一个大系统拆成多个独立小模块的设计原则。每个模块只负责一件事，通过明确定义的接口互相协作。好处是：改一个模块不影响其他模块。">模块化</span>设计的精髓。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 4 — QUIZ
+         ============================================================ -->
+    <div class="screen animate-in" id="s4-quiz">
+      <h2 class="screen-heading">检验一下你的理解</h2>
+
+      <p>三道情景题。每个场景模拟你实际开发中会遇到的需求变更——你需要判断该去找哪个"角色"。</p>
+
+      <div class="quiz-container" id="quiz-module2">
+
+        <!-- ── Q1 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="common" data-explanation-right="没错！日志格式、API 客户端、重试机制、配置加载——这些"基础设施"都由 common.py 提供。改日志格式，找后勤管家就对了。" data-explanation-wrong="日志格式属于基础设施，由 common.py 统一管理。fetch_data.py 只负责调用 bili CLI，不管日志怎么打。">
+          <p class="quiz-question">1. 你想修改程序的日志输出格式（比如加上时间戳），应该改哪个文件？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="fetch_data" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>fetch_data.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="common" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>common.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="pipeline" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>pipeline.py</code></span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q2 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="fetch_data" data-explanation-right="正确！bili CLI 返回的数据格式变了，负责"翻译"它的就是 fetch_data.py。你需要在 _run_bili_yaml 返回后的数据处理逻辑中适配新格式。" data-explanation-wrong="bili CLI 的数据是由 fetch_data.py 调用和解析的。如果返回格式变了，需要修改 fetch_data.py 中 _run_bili_yaml 之后的数据提取逻辑。common.py 只管基础设施，不处理业务数据。">
+          <p class="quiz-question">2. B 站更新了 API，bili CLI 返回了新格式的数据。你需要适配这个变化，该改哪个文件？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="common" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>common.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="fetch_data" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>fetch_data.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="generate_notes" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>generate_notes.py</code></span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q3 ──────────────────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="generate_notes" data-explanation-right="没错！generate_notes.py 负责调用 LLM 生成笔记。换成新的 AI 模型，只需修改这里的模型调用配置。其他脚本完全不受影响——这就是模块化的好处。" data-explanation-wrong="AI 模型生成笔记的逻辑在 generate_notes.py 中。analyze_frames.py 用的是视觉模型（VLM），而最终生成 Markdown 笔记的 LLM 调用在 generate_notes.py 里。">
+          <p class="quiz-question">3. 你想把生成笔记用的 AI 模型从 GPT 换成 Claude，应该改哪个文件？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="analyze_frames" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>analyze_frames.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="common" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>common.py</code></span>
+            </button>
+            <button class="quiz-option" data-value="generate_notes" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span><code>generate_notes.py</code></span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── QUIZ CONTROLS ────────────────────────────────────── -->
+        <div>
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module2')">检查答案</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module2')">重新作答</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.module-content -->
+
+</section><!-- /#module-2 -->

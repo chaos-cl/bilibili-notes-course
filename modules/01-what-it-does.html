@@ -1,0 +1,358 @@
+<!-- MODULE 1: 粘贴链接，获得笔记 -->
+<section class="module" id="module-1" style="min-height:100dvh;background:var(--color-bg)">
+
+  <div class="module-content">
+
+    <!-- ── MODULE HEADER ──────────────────────────────────────── -->
+    <header class="module-header animate-in">
+      <span class="module-number">01</span>
+      <h1 class="module-title">粘贴链接，获得笔记</h1>
+      <p class="module-subtitle">你每天刷 B 站，复制一个链接，一条命令——然后呢？让我们打开快递分拣中心的大门，看看包裹在各个站点之间经历了什么。</p>
+    </header>
+
+    <!-- ============================================================
+         SCREEN 1 — 你只需要一行命令
+         ============================================================ -->
+    <div class="screen animate-in" id="s1-command">
+      <h2 class="screen-heading">你只需要一行命令</h2>
+
+      <p>想象你走进一家快递分拣中心。你只需要把包裹（视频链接）递给前台，说一句暗号。剩下的，分拣中心的机器全部搞定。</p>
+
+      <p>在 Bilibili Notes 里，这句"暗号"就是下面这一行命令：</p>
+
+      <!-- ── CODE / ENGLISH TRANSLATION BLOCK ──────────────────── -->
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">终端</span>
+<span class="code-function">uv</span> <span class="code-string">run</span> <span class="code-keyword">python</span> <span class="code-string">scripts/pipeline.py</span> <span class="code-property">--bv</span> <span class="code-value">BV1ABcsztEcY</span>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">逐词翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>uv run</strong> &mdash; 用 <span class="term" data-definition="uv 是一个 Python 包管理器，类似 npm 之于 Node.js。它自动创建虚拟环境、安装依赖，让你不用手动配环境就能运行 Python 程序。">uv</span> 工具运行（自动装好依赖）</div>
+            <div class="tl"><strong>python scripts/pipeline.py</strong> &mdash; 执行流水线脚本</div>
+            <div class="tl"><strong>--bv</strong> &mdash; 指定输入模式为 <span class="term" data-definition="BV 号是 B 站每个视频的唯一标识符，类似身份证号。格式为 BV + 10 位字母数字，如 BV1ABcsztEcY。它出现在视频 URL 的末尾。">BV号</span></div>
+            <div class="tl"><strong>BV1ABcsztEcY</strong> &mdash; 这个视频的 BV 号（影视飓风的一期视频）</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x2139;&#xFE0F;</span>
+        <div class="callout-content">
+          <span class="callout-title">什么是 CLI？</span>
+          <p><span class="term" data-definition="CLI 即 Command Line Interface（命令行界面），是通过在终端窗口输入文字命令来操作程序的方式。和你习惯的点击按钮不同，CLI 靠输入精确的文字指令来告诉计算机要做什么。">CLI</span>（命令行界面）就是你跟程序对话的窗口。你输入一行文字，程序回复一行结果。没有按钮，没有界面——只有文字。这行命令就是你对"分拣中心"发出的第一张工单。</p>
+        </div>
+      </div>
+
+      <p>按回车之后，程序开始干活。它不会问你任何问题——你只需要等。</p>
+
+      <!-- ── REAL CODE SNIPPET ─────────────────────────────────── -->
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F4E6;</span>
+        <div class="callout-content">
+          <span class="callout-title">源码一瞥：流水线入口</span>
+          <p>以下是 <code>scripts/pipeline.py</code> 的核心函数签名。不用读懂每一行——只需看到它接收一个 BV 号，然后返回一个文件路径（生成的笔记）：</p>
+        </div>
+      </div>
+
+      <div class="translation-block">
+        <div class="translation-code" style="white-space:pre-wrap">
+          <span class="translation-label">Python</span>
+<span class="code-keyword">def</span> <span class="code-function">process_single</span>(bvid: <span class="code-string">str</span>, config: <span class="code-string">dict</span>, ...) -> <span class="code-string">Path</span>:
+    notes_dir, images_dir = get_vault_paths(config)
+
+    <span class="code-comment"># 检查是否已有笔记（跳过重复工作）</span>
+    existing = notes_dir.glob(<span class="code-string">f"*({bvid}).md"</span>)
+    <span class="code-keyword">if</span> existing:
+        <span class="code-keyword">return</span> existing   <span class="code-comment"># 已有就直接返回</span>
+
+    <span class="code-comment"># 1. 获取数据 → 2. 转录 → 3. 抽帧</span>
+    <span class="code-comment"># → 4. 分析 → 5. 生成笔记</span>
+    ...
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">白话翻译</span>
+          <div class="translation-lines">
+            <div class="tl"><strong>process_single</strong> &mdash; 处理一个视频的主函数</div>
+            <div class="tl"><strong>bvid</strong> &mdash; 传入的 BV 号（你的"快递单号"）</div>
+            <div class="tl"><strong>get_vault_paths</strong> &mdash; 找到 Obsidian 笔记库存放位置</div>
+            <div class="tl"><strong>existing check</strong> &mdash; 先查查这个快递是否已经处理过</div>
+            <div class="tl"><strong>5 个步骤</strong> &mdash; 按顺序走完整个分拣流水线</div>
+          </div>
+        </div>
+      </div>
+
+      <p>接下来，让我们跟着这个包裹，一站一站地走完整个流程。</p>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 2 — 幕后发生了什么
+         ============================================================ -->
+    <div class="screen animate-in" id="s2-flow">
+      <h2 class="screen-heading">幕后发生了什么</h2>
+
+      <p>你的包裹（BV 号）进入分拣中心后，会经过 5 个站点。每个站点都有专门的"工人"负责一道工序。点击"下一步"，跟着包裹走一遍。</p>
+
+      <!-- ── FLOW ANIMATION ────────────────────────────────────── -->
+      <div class="flow-animation" data-steps="[{&quot;label&quot;:&quot;用户提交 BV 号，快递包裹进入分拣中心&quot;,&quot;highlight&quot;:&quot;flow-user&quot;,&quot;from&quot;:&quot;user&quot;,&quot;to&quot;:&quot;pipeline&quot;,&quot;packet&quot;:true},{&quot;label&quot;:&quot;分拣中心派单：DataFetcher 开始抓取视频信息、字幕、评论、音频&quot;,&quot;highlight&quot;:&quot;flow-fetcher&quot;,&quot;from&quot;:&quot;pipeline&quot;,&quot;to&quot;:&quot;fetcher&quot;,&quot;packet&quot;:true},{&quot;label&quot;:&quot;并行处理：FrameExtractor 抽取关键帧，Whisper 转录音频为文字&quot;,&quot;highlight&quot;:&quot;flow-extractor&quot;,&quot;from&quot;:&quot;fetcher&quot;,&quot;to&quot;:&quot;extractor&quot;,&quot;packet&quot;:true},{&quot;label&quot;:&quot;NoteGenerator 用 AI 分析帧内容，结合字幕/转录生成结构化笔记&quot;,&quot;highlight&quot;:&quot;flow-generator&quot;,&quot;from&quot;:&quot;extractor&quot;,&quot;to&quot;:&quot;generator&quot;,&quot;packet&quot;:true},{&quot;label&quot;:&quot;成品送达：一份格式规范的 Obsidian Markdown 笔记已就位&quot;,&quot;highlight&quot;:&quot;flow-obsidian&quot;,&quot;from&quot;:&quot;generator&quot;,&quot;to&quot;:&quot;obsidian&quot;,&quot;packet&quot;:true}]">
+
+        <!-- ACTORS -->
+        <div class="flow-actors">
+          <div class="flow-actor" id="flow-user">
+            <div class="flow-actor-icon" style="color:var(--color-actor-1)">U</div>
+            <span>用户</span>
+          </div>
+          <div class="flow-actor" id="flow-pipeline">
+            <div class="flow-actor-icon" style="color:var(--color-actor-2)">P</div>
+            <span>Pipeline</span>
+          </div>
+          <div class="flow-actor" id="flow-fetcher">
+            <div class="flow-actor-icon" style="color:var(--color-actor-3)">D</div>
+            <span>DataFetcher</span>
+          </div>
+          <div class="flow-actor" id="flow-extractor">
+            <div class="flow-actor-icon" style="color:var(--color-actor-4)">E</div>
+            <span>FrameExtractor</span>
+          </div>
+          <div class="flow-actor" id="flow-generator">
+            <div class="flow-actor-icon" style="color:var(--color-actor-5)">G</div>
+            <span>NoteGenerator</span>
+          </div>
+          <div class="flow-actor" id="flow-obsidian">
+            <div class="flow-actor-icon" style="color:var(--color-actor-1)">O</div>
+            <span>Obsidian</span>
+          </div>
+        </div>
+
+        <!-- STEP LABEL -->
+        <div class="flow-step-label">点击"下一步"，开始跟踪包裹旅程</div>
+
+        <!-- PACKET -->
+        <div class="flow-packet"></div>
+
+        <!-- CONTROLS -->
+        <div class="flow-controls">
+          <button class="btn btn-primary flow-next-btn">下一步</button>
+          <button class="btn flow-reset-btn">重置</button>
+          <span class="flow-progress">Step 0 / 5</span>
+        </div>
+      </div>
+
+      <!-- ── STEP SUMMARY CARDS ────────────────────────────────── -->
+      <p>整个流程用一句话概括：</p>
+
+      <div class="step-cards stagger-children">
+        <div class="step-card animate-in">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>抓取数据</strong>
+            <p>DataFetcher 去 B 站服务器拉取视频信息、<span class="term" data-definition="字幕是视频画面上叠加的文字，通常是视频作者上传的或 B 站自动生成的语音转文字内容。不是所有视频都有字幕。">字幕</span>、<span class="term" data-definition="评论区是观众在视频下方发表的公开留言。程序会抓取热门评论用于笔记的"精选评论"板块。">评论</span>和<span class="term" data-definition="音频是视频中的声音轨道。程序会下载音频文件用于语音转文字（当视频没有字幕时）。">音频</span>——就像分拣员从包裹上取下所有快递单据。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>抽取关键帧 + 转录音频</strong>
+            <p>FrameExtractor 从视频中均匀截取最有代表性的画面。<span class="term" data-definition="Whisper 是 OpenAI 开源的语音识别模型。它能把音频自动转成文字，支持多种语言。在 Bilibili Notes 中，当视频没有字幕时，就用 Whisper 来听写内容。">Whisper</span> 把音频听写成文字——两个工序可以同时进行。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>AI 分析 + 生成笔记</strong>
+            <p><span class="term" data-definition="视觉模型（Vision Model）是一种能"看懂"图片的人工智能模型。在本项目中，它接收截取的关键帧图片，然后用自然语言描述每张图片的内容。">视觉模型</span>逐张分析关键帧内容。NoteGenerator 把字幕、转录、帧描述、评论全部汇总，交给 <span class="term" data-definition="LLM 即 Large Language Model（大语言模型），如 GPT、Claude 等。在本项目中，LLM 负责阅读所有素材并生成结构化的笔记。">LLM</span> 生成最终笔记。</p>
+          </div>
+        </div>
+        <div class="step-card animate-in">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>存入 Obsidian</strong>
+            <p>生成的 <span class="term" data-definition="Markdown 是一种用纯文本格式编写文档的标记语言。用 # 表示标题、用 ** 表示加粗等。Obsidian 原生支持 Markdown 格式。">Markdown</span> 文件直接保存到你的 <span class="term" data-definition="Obsidian 是一款本地知识管理工具，所有笔记以 Markdown 文件形式保存在本地文件夹（称为 vault）中。">Obsidian</span> vault 中——打开 Obsidian 就能看到。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent">
+        <span class="callout-icon">&#x1F4E6;</span>
+        <div class="callout-content">
+          <span class="callout-title">快递中心比喻</span>
+          <p>你投入一个包裹（BV 号）&rarr; 前台登记（Pipeline 接单）&rarr; 取件员拆箱提取信息（DataFetcher）&rarr; 质检员拍照 + 听写（FrameExtractor + Whisper）&rarr; 包装师分类整理贴标签（NoteGenerator + LLM）&rarr; 投递到你的邮箱（Obsidian vault）。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 3 — 产出的笔记长什么样
+         ============================================================ -->
+    <div class="screen animate-in" id="s3-output">
+      <h2 class="screen-heading">产出的笔记长什么样</h2>
+
+      <p>包裹投递完毕。你打开 Obsidian，会看到一份这样的笔记——不是一堆乱码，而是一个结构清晰、图文并茂的知识卡片。</p>
+
+      <!-- ── NOTE STRUCTURE VISUAL ─────────────────────────────── -->
+      <div style="margin:var(--space-8) 0">
+
+        <!-- FRONTMATTER -->
+        <div class="icon-rows">
+          <div class="icon-row animate-in">
+            <div class="icon-circle" style="background:var(--color-accent-light);color:var(--color-accent)">&#x1F3F7;&#xFE0F;</div>
+            <div>
+              <strong><span class="term" data-definition="Frontmatter 是 Markdown 文件最顶部用 --- 包裹的一段 YAML 元数据。Obsidian 使用它来存储笔记的标签、日期、链接等结构化信息，方便搜索和筛选。">Frontmatter</span> 元数据</strong>
+              <p>标题、BV号、UP主、时长、链接、日期、标签——笔记的"身份证"</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTE SECTIONS AS CARDS -->
+        <div class="pattern-cards" style="margin-top:var(--space-6)">
+
+          <div class="pattern-card animate-in" style="border-top-color:var(--color-actor-1)">
+            <div class="pattern-icon" style="background:var(--color-accent-light);color:var(--color-accent)">&#x1F4DD;</div>
+            <div class="pattern-title">概要 Summary</div>
+            <p class="pattern-desc">AI 自动生成的一段话，概括视频的核心内容。相当于快递单上的"物品摘要"。</p>
+          </div>
+
+          <div class="pattern-card animate-in" style="border-top-color:var(--color-actor-4)">
+            <div class="pattern-icon" style="background:#FEF3C7;color:#D97706">&#x1F4F7;</div>
+            <div class="pattern-title">关键帧 Keyframes</div>
+            <p class="pattern-desc">从视频中截取的代表性画面，每张配有 AI 生成的描述文字。相当于包裹里的实物照片。</p>
+          </div>
+
+          <div class="pattern-card animate-in" style="border-top-color:var(--color-actor-3)">
+            <div class="pattern-icon" style="background:var(--color-info-light);color:var(--color-info)">&#x1F4D6;</div>
+            <div class="pattern-title">详细笔记 Notes</div>
+            <p class="pattern-desc">按主题分段整理的笔记，来源是字幕或 Whisper 转录文本。每段有小标题和要点。</p>
+          </div>
+
+          <div class="pattern-card animate-in" style="border-top-color:var(--color-actor-5)">
+            <div class="pattern-icon" style="background:var(--color-success-light);color:var(--color-success)">&#x1F4AC;</div>
+            <div class="pattern-title">精选评论 Comments</div>
+            <p class="pattern-desc">从评论区抓取的热门评论。相当于其他"收件人"对这个包裹的评价。</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── REAL EXAMPLE REFERENCE ────────────────────────────── -->
+      <div class="callout callout-info">
+        <span class="callout-icon">&#x1F4CB;</span>
+        <div class="callout-content">
+          <span class="callout-title">真实例子</span>
+          <p>对视频 <code>BV1ABcsztEcY</code>（影视飓风：能卖上亿美金？国产短剧如何征服世界？）运行流水线后，生成的笔记包含 20 张关键帧截图、6 个主题分段（成本与效率、爽点驱动、商业逻辑等），以及完整的 frontmatter 元数据。文件名格式：<code>视频标题(BV号).md</code>。</p>
+        </div>
+      </div>
+
+      <!-- ── FRONTMATTER BADGE EXAMPLE ─────────────────────────── -->
+      <p>以下是 frontmatter 里的字段样例——每个字段都有明确用途：</p>
+
+      <div class="badge-list">
+        <div class="badge-item animate-in">
+          <code class="badge-code">title</code>
+          <span class="badge-desc">能卖上亿美金？国产短剧如何征服世界？</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">bvid</code>
+          <span class="badge-desc">BV1ABcsztEcY</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">author</code>
+          <span class="badge-desc">影视飓风</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">duration</code>
+          <span class="badge-desc">11:19</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">url</code>
+          <span class="badge-desc">https://www.bilibili.com/video/BV1ABcsztEcY</span>
+        </div>
+        <div class="badge-item animate-in">
+          <code class="badge-code">tags</code>
+          <span class="badge-desc">[bilibili]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCREEN 4 — QUIZ
+         ============================================================ -->
+    <div class="screen animate-in" id="s4-quiz">
+      <h2 class="screen-heading">检验一下你的理解</h2>
+
+      <p>看看你对这条命令和流水线的理解是否到位。三道情景题，每道都是你在实际使用中会遇到的真实场景。</p>
+
+      <div class="quiz-container" id="quiz-module1">
+
+        <!-- ── Q1: COMMAND FLAGS ────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="user" data-explanation-right="没错！--user 参数用于按 UP 主处理，搭配 --max 可以控制数量。就像告诉快递员：&quot;把这条街上所有住户的包裹都取来，最多 10 件。&quot;" data-explanation-wrong="处理 UP 主的视频需要用 --user 参数。--bv 只能处理单个视频，--url 是用来传完整链接或短链的。">
+          <p class="quiz-question">1. 你想处理一个 UP 主的最新 10 个视频，命令里应该用什么参数？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="bv" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>--bv</span>
+            </button>
+            <button class="quiz-option" data-value="user" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>--user &lt;UP主名称或UID&gt;</span>
+            </button>
+            <button class="quiz-option" data-value="url" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>--url &lt;视频链接&gt;</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q2: WHISPER FALLBACK ─────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="whisper" data-explanation-right="正确！当视频没有字幕时，流水线会自动下载音频，用 Whisper 模型进行语音转文字。这是流水线的"兜底机制"——保证你总能拿到文字内容。" data-explanation-wrong="流水线不会跳过或报错。它的设计是：如果没有字幕，就下载音频并用 Whisper 自动听写。这是 process_single 函数中的条件逻辑：if not subtitle_text and audio_path。">
+          <p class="quiz-question">2. 如果视频没有上传字幕，流水线会怎么做？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="skip" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>跳过字幕环节，笔记中不包含文字内容</span>
+            </button>
+            <button class="quiz-option" data-value="error" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>报错退出，提示用户手动添加字幕</span>
+            </button>
+            <button class="quiz-option" data-value="whisper" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>自动下载音频，用 Whisper 转录为文字</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── Q3: OUTPUT FORMAT ────────────────────────────────── -->
+        <div class="quiz-question-block" data-correct="obsidian-md" data-explanation-right="没错！流水线的最终产物是一份格式规范的 Markdown 文件，直接存入你的 Obsidian vault。打开 Obsidian 就能浏览、搜索、编辑。" data-explanation-wrong="Bilibili Notes 生成的是 Obsidian 兼容的 Markdown 文件（.md），不是 PDF 或网页。它利用 Markdown 的 frontmatter 特性和 Obsidian 的图片引用机制，实现无缝集成。">
+          <p class="quiz-question">3. 流水线的最终产出是什么格式？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="pdf" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>一份 PDF 文档，需要额外打开阅读器</span>
+            </button>
+            <button class="quiz-option" data-value="html" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>一个 HTML 网页，需要用浏览器打开</span>
+            </button>
+            <button class="quiz-option" data-value="obsidian-md" onclick="selectOption(this)">
+              <span class="quiz-option-radio"></span>
+              <span>一份 Obsidian Markdown 文件，直接在 Obsidian 中查看</span>
+            </button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <!-- ── QUIZ CONTROLS ────────────────────────────────────── -->
+        <div>
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module1')">检查答案</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module1')">重新作答</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.module-content -->
+
+</section><!-- /#module-1 -->
